@@ -1,0 +1,24 @@
+kind = "mobile"
+previewPath = "/gsi-mobile/"
+title = "GSI Tracker Mobile"
+description = "Native mobile companion for the GSI Partner Opportunity Tracker. Field reps can sign in, view their pipeline of opportunities with MEDDPICC scores, see deal details, check partner lists, and manage reminders — all from iOS or Android."
+version = "1.0.0"
+id = "artifacts/gsi-mobile"
+router = "expo-domain"
+
+[[services]]
+name = "expo"
+ensurePreviewReachable = "/status"
+paths = [ "/gsi-mobile/" ]
+localPort = 19883
+
+[services.development]
+run = "pnpm --filter @workspace/gsi-mobile run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/gsi-mobile", "run", "build" ]
+run = [ "pnpm", "--filter", "@workspace/gsi-mobile", "run", "serve" ]
+
+[services.env]
+PORT = "19883"
+BASE_PATH = "/gsi-mobile/"

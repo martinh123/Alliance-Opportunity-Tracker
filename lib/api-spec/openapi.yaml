@@ -1,0 +1,2326 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: GSI Partner Opportunity Tracker API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: auth
+    description: Authentication
+  - name: users
+    description: User management
+  - name: partners
+    description: GSI Partners
+  - name: partnerResources
+    description: People at GSI partner organizations
+  - name: people
+    description: Cross-directory people search for typeahead
+  - name: opportunities
+    description: Opportunities and Initiatives
+  - name: meddpicc
+    description: MEDDPICC entries
+  - name: dashboard
+    description: Dashboard aggregates
+  - name: profile
+    description: User profile and settings
+  - name: company
+    description: AI company intelligence (presentation-only, does not affect MEDDPICC score)
+  - name: backup
+    description: Admin data backup, restore, and reset
+  - name: orgData
+    description: Org-scoped data export and import (admin only)
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  # AUTH
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid credentials
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout
+      responses:
+        "204":
+          description: Logged out
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Not authenticated
+
+  # USERS (admin only)
+  /users:
+    get:
+      operationId: listUsers
+      tags: [users]
+      summary: List all users (admin only)
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+    post:
+      operationId: createUser
+      tags: [users]
+      summary: Create a new user (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "201":
+          description: Created user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /users/{id}:
+    get:
+      operationId: getUser
+      tags: [users]
+      summary: Get user by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateUser
+      tags: [users]
+      summary: Update user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    delete:
+      operationId: deleteUser
+      tags: [users]
+      summary: Delete user (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # PROFILE
+  /profile:
+    get:
+      operationId: getProfile
+      tags: [profile]
+      summary: Get current user profile settings
+      responses:
+        "200":
+          description: Profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+    patch:
+      operationId: updateProfile
+      tags: [profile]
+      summary: Update current user profile settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileUpdate"
+      responses:
+        "200":
+          description: Updated profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+
+  # PARTNERS
+  /partners:
+    get:
+      operationId: listPartners
+      tags: [partners]
+      summary: List all GSI partners
+      responses:
+        "200":
+          description: List of partners
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Partner"
+    post:
+      operationId: createPartner
+      tags: [partners]
+      summary: Create a GSI partner
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartnerInput"
+      responses:
+        "201":
+          description: Created partner
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Partner"
+
+  /partners/{id}:
+    get:
+      operationId: getPartner
+      tags: [partners]
+      summary: Get partner by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Partner
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Partner"
+        "404":
+          description: Not found
+    patch:
+      operationId: updatePartner
+      tags: [partners]
+      summary: Update partner
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartnerUpdate"
+      responses:
+        "200":
+          description: Updated partner
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Partner"
+    delete:
+      operationId: deletePartner
+      tags: [partners]
+      summary: Delete partner
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # INTERNAL RESOURCES
+  /internal-resources:
+    get:
+      operationId: listInternalResources
+      tags: [internalResources]
+      summary: List internal people resources
+      responses:
+        "200":
+          description: List of internal resources
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InternalResource"
+    post:
+      operationId: createInternalResource
+      tags: [internalResources]
+      summary: Create an internal resource
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InternalResourceInput"
+      responses:
+        "201":
+          description: Created internal resource
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalResource"
+        "200":
+          description: Existing internal resource reused (same normalized name+email)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalResource"
+
+  /internal-resources/bulk:
+    post:
+      operationId: bulkImportInternalResources
+      tags: [internalResources]
+      summary: Bulk-import contacts into the internal people directory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BulkInternalContactImportBody"
+      responses:
+        "200":
+          description: Import result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BulkContactImportResult"
+        "400":
+          description: Invalid request
+
+  /internal-resources/{id}:
+    patch:
+      operationId: updateInternalResource
+      tags: [internalResources]
+      summary: Update internal resource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InternalResourceUpdate"
+      responses:
+        "200":
+          description: Updated internal resource
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalResource"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteInternalResource
+      tags: [internalResources]
+      summary: Delete internal resource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # REMINDERS
+  /reminders:
+    get:
+      operationId: listReminders
+      tags: [reminders]
+      summary: List reminders (sorted by due date)
+      parameters:
+        - name: status
+          in: query
+          description: Filter by completion status (default all)
+          schema:
+            type: string
+            enum: [open, completed, all]
+      responses:
+        "200":
+          description: List of reminders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Reminder"
+    post:
+      operationId: createReminder
+      tags: [reminders]
+      summary: Create a reminder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReminderInput"
+      responses:
+        "201":
+          description: Created reminder
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reminder"
+
+  /reminders/{id}:
+    patch:
+      operationId: updateReminder
+      tags: [reminders]
+      summary: Update a reminder (rename, notes, reschedule, complete/un-complete)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReminderUpdate"
+      responses:
+        "200":
+          description: Updated reminder
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reminder"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteReminder
+      tags: [reminders]
+      summary: Delete reminder
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # PARTNER RESOURCES
+  /partner-resources:
+    get:
+      operationId: listPartnerResources
+      tags: [partnerResources]
+      summary: List partner people resources (optionally scoped to one partner)
+      parameters:
+        - name: partnerId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of partner resources
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PartnerResource"
+    post:
+      operationId: createPartnerResource
+      tags: [partnerResources]
+      summary: Create a partner resource
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartnerResourceInput"
+      responses:
+        "201":
+          description: Created partner resource
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartnerResource"
+        "200":
+          description: Existing partner resource reused (same normalized name+email)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartnerResource"
+
+  /partner-resources/bulk:
+    post:
+      operationId: bulkImportPartnerResources
+      tags: [partnerResources]
+      summary: Bulk-import contacts into a partner's people directory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BulkPartnerContactImportBody"
+      responses:
+        "200":
+          description: Import result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BulkContactImportResult"
+        "400":
+          description: Invalid request
+
+  /partner-resources/{id}:
+    patch:
+      operationId: updatePartnerResource
+      tags: [partnerResources]
+      summary: Update partner resource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PartnerResourceUpdate"
+      responses:
+        "200":
+          description: Updated partner resource
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartnerResource"
+        "404":
+          description: Not found
+    delete:
+      operationId: deletePartnerResource
+      tags: [partnerResources]
+      summary: Delete partner resource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # PEOPLE DIRECTORY SEARCH (typeahead)
+  /people/search:
+    get:
+      operationId: searchPeople
+      tags: [people]
+      summary: Search all people directories for typeahead lookups
+      parameters:
+        - name: q
+          in: query
+          required: false
+          description: Search text. Empty or absent returns a capped alphabetical browse list for the given scope.
+          schema:
+            type: string
+            default: ""
+        - name: partnerId
+          in: query
+          description: Boost/scope partner-resource matches to this partner
+          schema:
+            type: integer
+        - name: scope
+          in: query
+          description: Limit results to one directory
+          schema:
+            type: string
+            enum: [all, internal, partner, contact]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Matching people across directories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PersonSearchResult"
+
+  /people/nearby:
+    get:
+      operationId: findNearbyPeople
+      tags: [people]
+      summary: Find contacts within a distance radius of a destination
+      parameters:
+        - name: origin
+          in: query
+          required: true
+          description: Destination to search around, free text (e.g. "NYC")
+          schema:
+            type: string
+        - name: radius
+          in: query
+          required: true
+          description: Search radius around the origin
+          schema:
+            type: number
+        - name: unit
+          in: query
+          description: Distance unit for radius and returned distances (default mi)
+          schema:
+            type: string
+            enum: [mi, km]
+      responses:
+        "200":
+          description: Contacts within the radius, sorted nearest-first
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NearbyPeopleResult"
+        "422":
+          description: The origin could not be resolved to a place
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [error]
+                properties:
+                  error:
+                    type: string
+
+  # OPPORTUNITIES / INITIATIVES
+  /opportunities:
+    get:
+      operationId: listOpportunities
+      tags: [opportunities]
+      summary: List opportunities and initiatives
+      parameters:
+        - name: partnerId
+          in: query
+          schema:
+            type: integer
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [opportunity, initiative]
+        - name: stage
+          in: query
+          schema:
+            type: string
+        - name: ownerId
+          in: query
+          schema:
+            type: integer
+        - name: closeDateFrom
+          in: query
+          schema:
+            type: string
+        - name: closeDateTo
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of opportunities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Opportunity"
+    post:
+      operationId: createOpportunity
+      tags: [opportunities]
+      summary: Create an opportunity or initiative
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OpportunityInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Opportunity"
+
+  /opportunities/{id}:
+    get:
+      operationId: getOpportunity
+      tags: [opportunities]
+      summary: Get opportunity by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Opportunity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Opportunity"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateOpportunity
+      tags: [opportunities]
+      summary: Update opportunity
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OpportunityUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Opportunity"
+    delete:
+      operationId: deleteOpportunity
+      tags: [opportunities]
+      summary: Delete opportunity
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # MEDDPICC ENTRIES
+  /opportunities/{id}/meddpicc:
+    get:
+      operationId: getMeddpicc
+      tags: [meddpicc]
+      summary: Get all MEDDPICC entries for an opportunity
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: MEDDPICC entries grouped by element
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeddpiccData"
+
+  /meddpicc-entries:
+    post:
+      operationId: createMeddpiccEntry
+      tags: [meddpicc]
+      summary: Create a MEDDPICC entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MeddpiccEntryInput"
+      responses:
+        "201":
+          description: Created entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeddpiccEntry"
+
+  /meddpicc-entries/{id}:
+    patch:
+      operationId: updateMeddpiccEntry
+      tags: [meddpicc]
+      summary: Update a MEDDPICC entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MeddpiccEntryUpdate"
+      responses:
+        "200":
+          description: Updated entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeddpiccEntry"
+    delete:
+      operationId: deleteMeddpiccEntry
+      tags: [meddpicc]
+      summary: Delete a MEDDPICC entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /opportunities/{id}/meddpicc-sections:
+    get:
+      operationId: getMeddpiccSections
+      tags: [meddpicc]
+      summary: Get per-element notes and associated contact ids for an opportunity
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Section meta for each element that has any
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MeddpiccSectionMeta"
+
+  /opportunities/{id}/meddpicc-sections/{element}:
+    put:
+      operationId: updateMeddpiccSection
+      tags: [meddpicc]
+      summary: Upsert notes and associated contact ids for a single MEDDPICC element
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: element
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [metrics, economic_buyer, decision_criteria, decision_process, paper_process, identify_pain, champion, competition]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MeddpiccSectionMetaUpdate"
+      responses:
+        "200":
+          description: Updated section meta
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeddpiccSectionMeta"
+
+  /opportunities/{id}/company-research/sections/{element}/refresh:
+    post:
+      operationId: refreshCompanyResearchSection
+      tags: [company]
+      summary: Regenerate focused public-company context for a single MEDDPICC element
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: element
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [metrics, economic_buyer, decision_criteria, decision_process, paper_process, identify_pain, champion, competition]
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MacroSearchInput"
+      responses:
+        "200":
+          description: Company research with the refreshed section merged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyResearch"
+        "400":
+          description: Opportunity has no end customer set
+        "404":
+          description: Opportunity not found
+
+  # DASHBOARD
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get pipeline summary totals
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/by-partner:
+    get:
+      operationId: getPipelineByPartner
+      tags: [dashboard]
+      summary: Get pipeline revenue grouped by partner
+      responses:
+        "200":
+          description: Pipeline by partner
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PartnerPipelineSummary"
+
+  /dashboard/by-stage:
+    get:
+      operationId: getPipelineByStage
+      tags: [dashboard]
+      summary: Get opportunity counts and value by stage
+      responses:
+        "200":
+          description: Pipeline by stage
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StageSummary"
+
+  /dashboard/health-scores:
+    get:
+      operationId: getOpportunityHealthScores
+      tags: [dashboard]
+      summary: Get MEDDPICC completeness scores for all opportunities
+      responses:
+        "200":
+          description: Health scores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OpportunityHealthScore"
+
+  # COMPANY INTELLIGENCE
+  /companies/resolve:
+    get:
+      operationId: resolveCompany
+      tags: [company]
+      summary: Find candidate end-customer companies matching a search query
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Candidate companies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CompanyCandidate"
+
+  /opportunities/{id}/company-research:
+    get:
+      operationId: getCompanyResearch
+      tags: [company]
+      summary: Get synthesized public-company context for an opportunity's end customer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Company research
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyResearch"
+        "404":
+          description: No research generated yet
+
+  /opportunities/{id}/company-research/refresh:
+    post:
+      operationId: refreshCompanyResearch
+      tags: [company]
+      summary: Generate or regenerate public-company context for the end customer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Company research
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyResearch"
+        "400":
+          description: Opportunity has no end customer set
+
+  /partners/{id}/macro-research:
+    post:
+      operationId: searchPartnerMacro
+      tags: [company]
+      summary: Run grounded AI macro research on a GSI partner and append the summary to its notes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MacroSearchInput"
+      responses:
+        "200":
+          description: Updated partner with the macro summary appended as a note
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Partner"
+        "404":
+          description: Partner not found
+        "502":
+          description: Macro research failed
+
+  /opportunities/{id}/macro-research:
+    post:
+      operationId: searchOpportunityMacro
+      tags: [company]
+      summary: Run grounded AI macro research on the opportunity's end customer and append the summary to its notes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MacroSearchInput"
+      responses:
+        "200":
+          description: Updated opportunity with the macro summary appended as a note
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Opportunity"
+        "400":
+          description: Opportunity has no end customer set
+        "404":
+          description: Opportunity not found
+        "502":
+          description: Macro research failed
+
+  /admin/org-export:
+    get:
+      operationId: orgExport
+      tags: [orgData]
+      summary: Export this org's complete dataset (admin only)
+      responses:
+        "200":
+          description: Org export bundle
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrgExportBundle"
+        "403":
+          description: Admin access required
+
+  /admin/org-import:
+    post:
+      operationId: orgImport
+      tags: [orgData]
+      summary: Import an org export bundle, additive (admin only)
+      parameters:
+        - name: dryRun
+          in: query
+          schema:
+            type: string
+            enum: ["true", "false"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrgExportBundle"
+      responses:
+        "200":
+          description: Import result or dry-run preview
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrgImportResult"
+        "400":
+          description: Invalid bundle
+        "403":
+          description: Admin access required
+
+  /backup/export:
+    get:
+      operationId: exportBackup
+      tags: [backup]
+      summary: Export a full JSON backup of all user-entered data (admin only)
+      responses:
+        "200":
+          description: Full database backup
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BackupData"
+        "403":
+          description: Admin access required
+
+  /backup/import:
+    post:
+      operationId: importBackup
+      tags: [backup]
+      summary: Restore the database from a JSON backup, replacing all data (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BackupData"
+      responses:
+        "200":
+          description: Restore result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BackupActionResult"
+        "400":
+          description: Invalid or unsafe backup payload
+        "403":
+          description: Admin access required
+
+  /backup/clear:
+    post:
+      operationId: clearData
+      tags: [backup]
+      summary: Delete all user-entered data, preserving only the admin credentials (admin only)
+      responses:
+        "200":
+          description: Clear result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BackupActionResult"
+        "403":
+          description: Admin access required
+
+components:
+  schemas:
+    OrgExportBundle:
+      type: object
+      required: [version, exportedAt, org, data]
+      properties:
+        version:
+          type: string
+        exportedAt:
+          type: string
+        org:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+        data:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: object
+              additionalProperties: true
+
+    OrgImportResult:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        dryRun:
+          type: boolean
+        message:
+          type: string
+        counts:
+          type: object
+          additionalProperties:
+            type: integer
+        preview:
+          type: object
+          additionalProperties:
+            type: integer
+        warnings:
+          type: array
+          items:
+            type: string
+
+    ContactImportRow:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        func:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        location:
+          type: string
+          nullable: true
+        isManager:
+          type: boolean
+        notes:
+          type: string
+          nullable: true
+          description: Free-text note; converted to a single Note entry on the server
+
+    BulkPartnerContactImportBody:
+      type: object
+      required: [partnerId, rows]
+      properties:
+        partnerId:
+          type: integer
+        rows:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContactImportRow"
+
+    BulkInternalContactImportBody:
+      type: object
+      required: [rows]
+      properties:
+        rows:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContactImportRow"
+
+    BulkContactImportResult:
+      type: object
+      required: [inserted, skipped, errors]
+      properties:
+        inserted:
+          type: integer
+        skipped:
+          type: integer
+        errors:
+          type: array
+          items:
+            type: string
+
+    BackupData:
+      type: object
+      required: [tables]
+      properties:
+        version:
+          type: string
+        exportedAt:
+          type: string
+        tables:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: object
+              additionalProperties: true
+
+    BackupActionResult:
+      type: object
+      required: [ok]
+      properties:
+        ok:
+          type: boolean
+        message:
+          type: string
+        counts:
+          type: object
+          additionalProperties:
+            type: integer
+
+    HealthStatus:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+
+    # AUTH
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    AuthResponse:
+      type: object
+      required: [user]
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        token:
+          type: string
+          description: Bearer token for mobile/API client authentication
+
+    # USER
+    User:
+      type: object
+      required: [id, email, role, name]
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum: [admin, rep]
+        quota:
+          type: ["number", "null"]
+        region:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    UserInput:
+      type: object
+      required: [email, password, name, role]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum: [admin, rep]
+        quota:
+          type: ["number", "null"]
+        region:
+          type: ["string", "null"]
+
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+          enum: [admin, rep]
+        quota:
+          type: ["number", "null"]
+        region:
+          type: ["string", "null"]
+        password:
+          type: ["string", "null"]
+
+    # PROFILE
+    Profile:
+      type: object
+      required: [id, userId, revenueMetric, fiscalYearStart, fiscalYearEnd]
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        revenueMetric:
+          type: string
+          enum: [ACV, TCV, ARR, Bookings]
+        fiscalYearStart:
+          type: string
+          description: "Month number 1-12 for fiscal year start"
+        fiscalYearEnd:
+          type: string
+          description: "Month number 1-12 for fiscal year end"
+        quota:
+          type: ["number", "null"]
+        q1GoalPct:
+          type: ["number", "null"]
+          description: "Percentage of annual quota targeted for Q1 (default 25)"
+        q2GoalPct:
+          type: ["number", "null"]
+          description: "Percentage of annual quota targeted for Q2 (default 25)"
+        q3GoalPct:
+          type: ["number", "null"]
+          description: "Percentage of annual quota targeted for Q3 (default 25)"
+        q4GoalPct:
+          type: ["number", "null"]
+          description: "Percentage of annual quota targeted for Q4 (default 25)"
+
+    ProfileUpdate:
+      type: object
+      properties:
+        revenueMetric:
+          type: string
+          enum: [ACV, TCV, ARR, Bookings]
+        fiscalYearStart:
+          type: string
+        fiscalYearEnd:
+          type: string
+        quota:
+          type: ["number", "null"]
+        q1GoalPct:
+          type: ["number", "null"]
+        q2GoalPct:
+          type: ["number", "null"]
+        q3GoalPct:
+          type: ["number", "null"]
+        q4GoalPct:
+          type: ["number", "null"]
+
+    # PARTNER
+    Partner:
+      type: object
+      required: [id, name, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        tier:
+          type: ["string", "null"]
+        region:
+          type: ["string", "null"]
+        contactName:
+          type: ["string", "null"]
+        contactEmail:
+          type: ["string", "null"]
+        primaryContactId:
+          type: ["integer", "null"]
+        notes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Note"
+        revenueTarget:
+          type: ["number", "null"]
+        createdAt:
+          type: string
+
+    PartnerInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        tier:
+          type: ["string", "null"]
+        region:
+          type: ["string", "null"]
+        contactName:
+          type: ["string", "null"]
+        contactEmail:
+          type: ["string", "null"]
+        notes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Note"
+        revenueTarget:
+          type: ["number", "null"]
+
+    PartnerUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        tier:
+          type: ["string", "null"]
+        region:
+          type: ["string", "null"]
+        contactName:
+          type: ["string", "null"]
+        contactEmail:
+          type: ["string", "null"]
+        primaryContactId:
+          type: ["integer", "null"]
+        notes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Note"
+        revenueTarget:
+          type: ["number", "null"]
+
+    # INTERNAL RESOURCE
+    InternalResource:
+      type: object
+      required: [id, name, isManager, notes, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        func:
+          type: ["string", "null"]
+          description: The person's function / role in the company
+        email:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        location:
+          type: ["string", "null"]
+        isManager:
+          type: boolean
+        managerId:
+          type: ["integer", "null"]
+        notes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Note"
+        createdAt:
+          type: string
+
+    InternalResourceInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        func:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        location:
+          type: ["string", "null"]
+        isManager:
+          type: boolean
+        managerId:
+          type: ["integer", "null"]
+        notes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Note"
+
+    InternalResourceUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        func:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        location:
+          type: ["string", "null"]
+        isManager:
+          type: boolean
+        managerId:
+          type: ["integer", "null"]
+        notes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Note"
+
+    # PARTNER RESOURCE
+    PartnerResource:
+      type: object
+      required: [id, partnerId, name, isManager, notes, createdAt]
+      properties:
+        id:
+          type: integer
+        partnerId:
+          type: integer
+        name:
+          type: string
+        func:
+          type: ["string", "null"]
+          description: The person's function / role at the partner
+        email:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        location:
+          type: ["string", "null"]
+        isManager:
+          type: boolean
+        managerId:
+          type: ["integer", "null"]
+        notes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Note"
+        createdAt:
+          type: string
+
+    PartnerResourceInput:
+      type: object
+      required: [partnerId, name]
+      properties:
+        partnerId:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+        func:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        location:
+          type: ["string", "null"]
+        isManager:
+          type: boolean
+        managerId:
+          type: ["integer", "null"]
+        notes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Note"
+
+    PartnerResourceUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        func:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        location:
+          type: ["string", "null"]
+        isManager:
+          type: boolean
+        managerId:
+          type: ["integer", "null"]
+        notes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Note"
+
+    # PEOPLE DIRECTORY SEARCH
+    PersonSearchResult:
+      type: object
+      required: [ref, source, name]
+      properties:
+        ref:
+          type: string
+          description: "Stable directory reference, e.g. internal:5, partner:3, contact:<uuid>"
+        source:
+          type: string
+          enum: [internal, partner, contact]
+        name:
+          type: string
+        role:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        location:
+          type: ["string", "null"]
+        org:
+          type: ["string", "null"]
+          description: "Display org: 'Internal', partner name, or contact org"
+        partnerId:
+          type: ["integer", "null"]
+
+    NearbyPerson:
+      allOf:
+        - $ref: "#/components/schemas/PersonSearchResult"
+        - type: object
+          required: [distance, resolvedLocation]
+          properties:
+            distance:
+              type: number
+              description: Distance from the origin, in the requested unit
+            resolvedLocation:
+              type: string
+              description: Canonical place name the contact's location resolved to
+
+    NearbyPeopleResult:
+      type: object
+      required: [origin, unit, results, unresolved]
+      properties:
+        origin:
+          type: object
+          required: [query, name, lat, lon]
+          properties:
+            query:
+              type: string
+            name:
+              type: string
+              description: Canonical place name the origin resolved to
+            lat:
+              type: number
+            lon:
+              type: number
+        unit:
+          type: string
+          enum: [mi, km]
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/NearbyPerson"
+        unresolved:
+          type: array
+          description: Contact locations that could not be resolved to a place
+          items:
+            type: object
+            required: [location, count]
+            properties:
+              location:
+                type: string
+              count:
+                type: integer
+
+    # OPPORTUNITY
+    Opportunity:
+      type: object
+      required: [id, name, type, partnerId, stage, ownerId, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+          enum: [opportunity, initiative]
+        partnerId:
+          type: integer
+        partnerName:
+          type: ["string", "null"]
+        ownerId:
+          type: integer
+        ownerName:
+          type: ["string", "null"]
+        stage:
+          type: string
+          enum: [Qualify, Discovery, Propose, Negotiate, Commit, ClosedWon, ClosedLost, Dormant]
+        country:
+          type: ["string", "null"]
+        dateIn:
+          type: ["string", "null"]
+        hpeTeam:
+          type: ["string", "null"]
+        partnerContact:
+          type: ["string", "null"]
+        partnerContactRole:
+          type: ["string", "null"]
+        numEndpoints:
+          type: ["integer", "null"]
+        useCase:
+          type: ["string", "null"]
+        endCustomer:
+          type: ["string", "null"]
+        endCustomerDomain:
+          type: ["string", "null"]
+        revenueValue:
+          type: ["number", "null"]
+        closeDate:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        notes:
+          type: array
+          items:
+            $ref: "#/components/schemas/OppNote"
+        contacts:
+          type: array
+          items:
+            $ref: "#/components/schemas/OppContact"
+        meddpiccScore:
+          type: ["number", "null"]
+        closedWonAt:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    OppNote:
+      type: object
+      required: [id, text, createdAt]
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        createdAt:
+          type: string
+
+    MacroSearchInput:
+      type: object
+      properties:
+        context:
+          type: ["string", "null"]
+          description: Rep-edited free-text search context that steers the grounded macro research
+
+    Note:
+      type: object
+      required: [id, text, createdAt]
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        createdAt:
+          type: string
+
+    Reminder:
+      type: object
+      required: [id, name, dueAt, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        dueAt:
+          type: string
+        entityType:
+          type: ["string", "null"]
+        entityId:
+          type: ["string", "null"]
+        entityLabel:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        completedAt:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    ReminderInput:
+      type: object
+      required: [name, dueAt]
+      properties:
+        name:
+          type: string
+        dueAt:
+          type: string
+        entityType:
+          type: ["string", "null"]
+        entityId:
+          type: ["string", "null"]
+        entityLabel:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+
+    ReminderUpdate:
+      type: object
+      description: Partial update. Set completed=true/false to complete or reopen.
+      properties:
+        name:
+          type: string
+        dueAt:
+          type: string
+        notes:
+          type: ["string", "null"]
+        completed:
+          type: boolean
+        entityType:
+          type: ["string", "null"]
+        entityId:
+          type: ["string", "null"]
+        entityLabel:
+          type: ["string", "null"]
+
+    OpportunityInput:
+      type: object
+      required: [name, type, partnerId, stage, ownerId]
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [opportunity, initiative]
+        partnerId:
+          type: integer
+        ownerId:
+          type: integer
+        stage:
+          type: string
+          enum: [Qualify, Discovery, Propose, Negotiate, Commit, ClosedWon, ClosedLost, Dormant]
+        country:
+          type: ["string", "null"]
+        dateIn:
+          type: ["string", "null"]
+        hpeTeam:
+          type: ["string", "null"]
+        partnerContact:
+          type: ["string", "null"]
+        partnerContactRole:
+          type: ["string", "null"]
+        numEndpoints:
+          type: ["integer", "null"]
+        useCase:
+          type: ["string", "null"]
+        endCustomer:
+          type: ["string", "null"]
+        endCustomerDomain:
+          type: ["string", "null"]
+        revenueValue:
+          type: ["number", "null"]
+        closeDate:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+
+    OpportunityUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [opportunity, initiative]
+        partnerId:
+          type: integer
+        ownerId:
+          type: integer
+        stage:
+          type: string
+          enum: [Qualify, Discovery, Propose, Negotiate, Commit, ClosedWon, ClosedLost, Dormant]
+        country:
+          type: ["string", "null"]
+        dateIn:
+          type: ["string", "null"]
+        hpeTeam:
+          type: ["string", "null"]
+        partnerContact:
+          type: ["string", "null"]
+        partnerContactRole:
+          type: ["string", "null"]
+        numEndpoints:
+          type: ["integer", "null"]
+        useCase:
+          type: ["string", "null"]
+        endCustomer:
+          type: ["string", "null"]
+        endCustomerDomain:
+          type: ["string", "null"]
+        revenueValue:
+          type: ["number", "null"]
+        closeDate:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        notes:
+          type: array
+          items:
+            $ref: "#/components/schemas/OppNote"
+        contacts:
+          type: array
+          items:
+            $ref: "#/components/schemas/OppContact"
+
+    OppContact:
+      type: object
+      required: [id, name, org, createdAt]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          minLength: 1
+        org:
+          type: string
+          enum: [HPE, Partner, Customer, Other]
+        role:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        location:
+          type: ["string", "null"]
+        directoryRef:
+          type: ["string", "null"]
+          description: "Optional link back to a directory record (e.g. internal:5, partner:3)"
+        createdAt:
+          type: string
+
+    # MEDDPICC
+    MeddpiccElement:
+      type: string
+      enum: [metrics, economic_buyer, decision_criteria, decision_process, paper_process, identify_pain, champion, competition]
+
+    MeddpiccEntry:
+      type: object
+      required: [id, opportunityId, element, content, customerValidated, createdAt]
+      properties:
+        id:
+          type: integer
+        opportunityId:
+          type: integer
+        element:
+          $ref: "#/components/schemas/MeddpiccElement"
+        content:
+          type: string
+        customerValidated:
+          type: boolean
+        relevanceScore:
+          type: ["integer", "null"]
+          description: "1-5 relevance to opportunity progression"
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    MeddpiccEntryInput:
+      type: object
+      required: [opportunityId, element, content]
+      properties:
+        opportunityId:
+          type: integer
+        element:
+          $ref: "#/components/schemas/MeddpiccElement"
+        content:
+          type: string
+        customerValidated:
+          type: boolean
+        relevanceScore:
+          type: ["integer", "null"]
+
+    MeddpiccEntryUpdate:
+      type: object
+      properties:
+        content:
+          type: string
+        customerValidated:
+          type: boolean
+        relevanceScore:
+          type: ["integer", "null"]
+
+    MeddpiccElementEntries:
+      type: object
+      required: [element, entries, completionPct, score, weight]
+      properties:
+        element:
+          $ref: "#/components/schemas/MeddpiccElement"
+        entries:
+          type: array
+          items:
+            $ref: "#/components/schemas/MeddpiccEntry"
+        completionPct:
+          type: number
+          description: "0-100 percentage of validated entries"
+        score:
+          type: number
+          description: "0-100 weighted qualification strength for this element (presence + validation + relevance)"
+        weight:
+          type: number
+          description: "Relative importance of this element toward the overall score (percentage, all weights sum to 100)"
+
+    MeddpiccSectionMeta:
+      type: object
+      required: [element, notes, contactIds]
+      properties:
+        element:
+          $ref: "#/components/schemas/MeddpiccElement"
+        notes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Note"
+        contactIds:
+          type: array
+          items:
+            type: string
+        ownerId:
+          type: string
+          nullable: true
+
+    MeddpiccSectionMetaUpdate:
+      type: object
+      properties:
+        notes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Note"
+        contactIds:
+          type: array
+          items:
+            type: string
+        ownerId:
+          type: string
+          nullable: true
+
+    MeddpiccData:
+      type: object
+      required: [opportunityId, overallScore, elements]
+      properties:
+        opportunityId:
+          type: integer
+        overallScore:
+          type: number
+          description: "0-100 overall MEDDPICC completeness"
+        elements:
+          type: array
+          items:
+            $ref: "#/components/schemas/MeddpiccElementEntries"
+
+    # COMPANY INTELLIGENCE
+    CompanyCandidate:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        domain:
+          type: ["string", "null"]
+        industry:
+          type: ["string", "null"]
+        location:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+
+    CompanySource:
+      type: object
+      required: [title, url]
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+
+    CompanyResearchSection:
+      type: object
+      required: [element, summary, sources]
+      properties:
+        element:
+          $ref: "#/components/schemas/MeddpiccElement"
+        summary:
+          type: string
+        sources:
+          type: array
+          items:
+            $ref: "#/components/schemas/CompanySource"
+
+    CompanyResearch:
+      type: object
+      required: [opportunityId, companyName, sections, status]
+      properties:
+        opportunityId:
+          type: integer
+        companyName:
+          type: string
+        companyDomain:
+          type: ["string", "null"]
+        industry:
+          type: ["string", "null"]
+        location:
+          type: ["string", "null"]
+        overview:
+          type: ["string", "null"]
+        sections:
+          type: array
+          items:
+            $ref: "#/components/schemas/CompanyResearchSection"
+        status:
+          type: string
+          enum: [ready, error]
+        error:
+          type: ["string", "null"]
+        generatedAt:
+          type: ["string", "null"]
+
+    # DASHBOARD
+    DashboardSummary:
+      type: object
+      required: [totalPipelineValue, totalOpportunities, totalInitiatives, totalPartners, closingThisQuarter, closingThisFiscalYear, closedWonValue, avgMeddpiccScore]
+      properties:
+        totalPipelineValue:
+          type: number
+        totalOpportunities:
+          type: integer
+        totalInitiatives:
+          type: integer
+        totalPartners:
+          type: integer
+        closingThisQuarter:
+          type: number
+        closingThisFiscalYear:
+          type: number
+        closedWonValue:
+          type: number
+        avgMeddpiccScore:
+          type: number
+
+    PartnerPipelineSummary:
+      type: object
+      required: [partnerId, partnerName, totalValue, opportunityCount, initiativeCount]
+      properties:
+        partnerId:
+          type: integer
+        partnerName:
+          type: string
+        totalValue:
+          type: number
+        opportunityCount:
+          type: integer
+        initiativeCount:
+          type: integer
+
+    StageSummary:
+      type: object
+      required: [stage, count, totalValue]
+      properties:
+        stage:
+          type: string
+        count:
+          type: integer
+        totalValue:
+          type: number
+
+    OpportunityHealthScore:
+      type: object
+      required: [opportunityId, opportunityName, meddpiccScore, missingElements]
+      properties:
+        opportunityId:
+          type: integer
+        opportunityName:
+          type: string
+        partnerId:
+          type: integer
+        partnerName:
+          type: string
+        meddpiccScore:
+          type: number
+        missingElements:
+          type: array
+          items:
+            type: string
+        stage:
+          type: string
+        revenueValue:
+          type: ["number", "null"]

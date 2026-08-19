@@ -1,0 +1,9 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "Tz6t3Is1sUMLpECbxDcpO"
+uri = "file://lib/api-spec/openapi.yaml"
+type = "unspecified"
+title = "GSI Tracker OpenAPI Spec"
+description = "Full OpenAPI 3.1 specification for the GSI Partner Opportunity Tracker API — all endpoints, request/response schemas, and tags."

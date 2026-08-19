@@ -1,0 +1,17 @@
+- [Drizzle push TTY blocker](drizzle-push-tty.md) — drizzle-kit push prompts on TTY and hangs in this env; apply DDL directly via psql "$DATABASE_URL" and keep constraint names matching drizzle's generated names.
+- [DB backup/import round-trip](db-backup-roundtrip.md) — generic full-DB JSON export/restore over pg pool: jsonb stringify, serial-sequence re-sync, column whitelist, admin-lockout guard.
+- [Structured multi-note lists](multi-note-lists.md) — shared Note{id,text,createdAt} jsonb + one NotesEditor; immediate-save surfaces need local optimistic copy + serialized saves or edits race/drop.
+- [AI context is presentation-only](ai-presentation-only.md) — AI corporate intelligence must never influence MEDDPICC scoring; only rep entries score.
+- [Auth implementation](auth-impl.md) — auth without bcrypt/express-session (blocked by pnpm firewall): Node crypto scrypt + HMAC-signed cookie.
+- [closedWonAt auto-timestamp](closed-won-at.md) — set server-side on first ClosedWon transition; not cleared on reopen.
+- [DB seeding](db-seeding.md) — how to seed the DB here (raw pg CommonJS client via .pnpm path).
+- [End customer ↔ research coupling](end-customer-research-coupling.md) — changing an opportunity's end customer must clear its stored company research.
+- [Geocoding contact locations](geocoding-contacts.md) — AI-normalize informal strings before Nominatim (raw "Cinci" mislocates); cache only definitive outcomes; bind AI batch output to requested keys.
+- [Gemini in api-server](gemini-api-server.md) — wiring Gemini into the bundled Express server; JSON sanitation, thinking-token truncation guards, plain-text fallback for grounded calls, testing slow endpoints.
+- [MEDDPICC weighted scoring](meddpicc-scoring.md) — score is weighted and server-owned; the rule for changing it.
+- [Per-user API caching](per-user-api-caching.md) — authenticated per-user responses must be no-store or 304s revert data; matching frontend pitfall.
+- [Radix Select empty onValueChange](radix-select-empty-onvaluechange.md) — controlled Select can fire onValueChange("") on remount and clobber state.
+- [Stale bundle after schema change](stale-bundle.md) — restart api-server after any lib/db schema change or Drizzle sees missing columns at runtime.
+- [Stale Vite client silent UI](stale-vite-client-silent-ui.md) — dialogs/buttons silently doing nothing in dev preview = stale HMR client, not a code bug.
+- [Single @types/react version](types-react-single-version.md) — duplicate @types/react copies (Expo 19.1 vs newer) break typecheck via pnpm's hidden hoisted store; pinned via catalog + overrides.
+- [Silent form-submit failures](silent-form-failures.md) — native email validation can block submit with zero network traffic; dialog saves need noValidate + toast validation + try/catch on mutations.
