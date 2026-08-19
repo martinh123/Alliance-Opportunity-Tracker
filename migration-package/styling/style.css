@@ -1,0 +1,17 @@
+/*
+  Fallback/compiled CSS for theme. This is taken from the frontend artifact (index.css) and acts as a compiled stylesheet included by theme scaffolding.
+  Note: If you prefer to recompile Tailwind inside the theme, replace this file with the compiled output.
+*/
+
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+/* Theme design tokens and variables are present in the original CSS; the SiteGround AI can refine as needed. */
+
+:root{--background:#f7fafc;--foreground:#1f2937}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial; background:var(--background); color:var(--foreground);} 
+
+/* Minimal utility placeholders to ensure pages render acceptably if Tailwind isn't fully processed */
+.container{max-width:1200px;margin:0 auto;padding:1rem}
+.card{background:white;border:1px solid #e5e7eb;padding:1rem;border-radius:.5rem}

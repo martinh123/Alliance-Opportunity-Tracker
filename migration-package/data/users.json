@@ -1,0 +1,4 @@
+[
+  {"external_id":501,"email":"owner1@example.com","first_name":"Owner","last_name":"One","role":"editor"},
+  {"external_id":502,"email":"owner2@example.com","first_name":"Owner","last_name":"Two","role":"editor"}
+]

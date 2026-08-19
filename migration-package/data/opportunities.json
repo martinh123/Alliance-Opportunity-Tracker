@@ -1,0 +1,41 @@
+[
+  {
+    "external_id": 1001,
+    "title": "Acme Corp Cloud Migration",
+    "body": "Opportunity to migrate Acme to cloud services. Key contacts and notes attached.",
+    "type": "opportunity",
+    "stage": "Proposal",
+    "value": 250000,
+    "close_date": "2026-10-15",
+    "owner_external_id": 501,
+    "partner_external_id": 201,
+    "contacts_external_ids": [301, 302],
+    "attachments": []
+  },
+  {
+    "external_id": 1002,
+    "title": "Globex Analytics Initiative",
+    "body": "Pilot analytics engagement for Globex. Requires MEDDPICC entries.",
+    "type": "initiative",
+    "stage": "Discovery",
+    "value": 90000,
+    "close_date": "2026-08-01",
+    "owner_external_id": 502,
+    "partner_external_id": 202,
+    "contacts_external_ids": [303],
+    "attachments": []
+  },
+  {
+    "external_id": 1003,
+    "title": "Initech Renewal",
+    "body": "Renewal opportunity for Initech multi-year contract.",
+    "type": "opportunity",
+    "stage": "Negotiation",
+    "value": 120000,
+    "close_date": "2026-09-30",
+    "owner_external_id": 503,
+    "partner_external_id": 201,
+    "contacts_external_ids": [304,305],
+    "attachments": []
+  }
+]

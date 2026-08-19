@@ -1,0 +1,18 @@
+{
+  "files": [
+    "data/opportunities.json",
+    "data/partners.json",
+    "data/people.json",
+    "data/users.json",
+    "metadata/routes.md",
+    "metadata/forms.json",
+    "styling/style.css",
+    "theme-scaffold/functions.php",
+    "theme-scaffold/inc/post-types.php",
+    "theme-scaffold/inc/rest-routes.php",
+    "theme-scaffold/inc/importer.php",
+    "docs/importer-runbook.md"
+  ],
+  "generated_by": "copilot",
+  "note": "This manifest lists high-level package contents. Verify files after download."
+}

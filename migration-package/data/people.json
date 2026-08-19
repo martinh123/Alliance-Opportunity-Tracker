@@ -1,0 +1,5 @@
+[
+  {"external_id":301,"name":"Alice Johnson","email":"alice@example.com","title":"CTO","partner_external_id":201},
+  {"external_id":302,"name":"Bob Lee","email":"bob@example.com","title":"Head of Cloud","partner_external_id":201},
+  {"external_id":303,"name":"Carol Smith","email":"carol@example.com","title":"Director Analytics","partner_external_id":202}
+]

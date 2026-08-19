@@ -1,0 +1,14 @@
+{
+  "createOpportunity": {
+    "action": "/wp-json/custom/v1/opportunities",
+    "method": "POST",
+    "fields": [
+      {"name":"title","type":"string","required":true},
+      {"name":"body","type":"string","required":false},
+      {"name":"type","type":"string","required":true},
+      {"name":"stage","type":"string","required":false},
+      {"name":"value","type":"number","required":false},
+      {"name":"close_date","type":"string","format":"date","required":false}
+    ]
+  }
+}
