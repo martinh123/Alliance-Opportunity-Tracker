@@ -1,5 +1,12 @@
 # GitHub Copilot Prompt — Alliance Opportunity Tracker to WordPress
 
+> **Use `GITHUB-COPILOT-FINAL-HANDOFF.md` as the definitive final instruction.**
+>
+> It supersedes any instruction below that conflicts with it, explains what was
+> completed, and gives the complete migration path without requesting additional
+> exports, ZIP files, or handoff material. The content below is retained only as
+> earlier context.
+
 You are helping migrate the Alliance Opportunity Tracker from Replit into a custom WordPress 7.1 installation on SiteGround.
 
 Do not look for or request ZIP uploads. All migration material is already stored as ordinary repository files under `wordpress-migration/`.
