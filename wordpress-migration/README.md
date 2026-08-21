@@ -6,9 +6,10 @@ This directory contains the migration materials as ordinary repository files. No
 
 1. Read `../GITHUB-COPILOT-MIGRATION-PROMPT.md`.
 2. Read `docs/MIGRATION-NOTES.md`.
-3. Review `reference/gsi-wordpress-build-spec.html` for the target custom WordPress architecture.
-4. Review `reference/gsi-current-database-schema.md` and `reference/gsi-current-database-schema.sql` for the current PostgreSQL model.
-5. Review `reference/openapi.yaml` for the current API contract.
+3. Read `docs/COPILOT-COMPLETE-TRANSFER-INVENTORY.md` for the complete source, data, assets, environment, and build checklist.
+4. Review `reference/gsi-wordpress-build-spec.html` for the target custom WordPress architecture.
+5. Review `reference/gsi-current-database-schema.md` and `reference/gsi-current-database-schema.sql` for the current PostgreSQL model.
+6. Review `reference/openapi.yaml` for the current API contract.
 
 ## Directory map
 
