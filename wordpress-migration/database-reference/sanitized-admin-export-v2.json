@@ -1,0 +1,316 @@
+{
+  "version": "2",
+  "exportedAt": "2026-08-21T00:00:00.000Z",
+  "org": {
+    "id": 1,
+    "name": "Demo Alliance Organization",
+    "mcp_key": "[REDACTED]"
+  },
+  "data": {
+    "users": [
+      {
+        "id": 1,
+        "email": "admin@example.invalid",
+        "password_hash": "[REDACTED — create a WordPress user through WordPress]",
+        "name": "Admin Example",
+        "role": "admin",
+        "quota": "1000000.00",
+        "region": "North America",
+        "org_id": 1,
+        "created_at": "2026-01-05T12:00:00.000Z",
+        "updated_at": "2026-01-05T12:00:00.000Z"
+      },
+      {
+        "id": 2,
+        "email": "rep@example.invalid",
+        "password_hash": "[REDACTED — create a WordPress user through WordPress]",
+        "name": "Rep Example",
+        "role": "rep",
+        "quota": "500000.00",
+        "region": "North America",
+        "org_id": 1,
+        "created_at": "2026-01-06T12:00:00.000Z",
+        "updated_at": "2026-01-06T12:00:00.000Z"
+      }
+    ],
+    "partners": [
+      {
+        "id": 1,
+        "name": "Northwind Demo Partners",
+        "tier": "Strategic",
+        "region": "North America",
+        "contact_name": "Jordan Partner",
+        "contact_email": "jordan.partner@example.invalid",
+        "primary_contact_id": 1,
+        "notes": [
+          {
+            "id": "partner-note-1",
+            "text": "Fictional partner note for migration testing.",
+            "createdAt": "2026-01-10T12:00:00.000Z"
+          }
+        ],
+        "revenue_target": "750000.00",
+        "org_id": 1,
+        "created_at": "2026-01-07T12:00:00.000Z",
+        "updated_at": "2026-01-10T12:00:00.000Z"
+      }
+    ],
+    "partnerResources": [
+      {
+        "id": 1,
+        "partner_id": 1,
+        "name": "Jordan Partner",
+        "function": "Alliance Director",
+        "email": "jordan.partner@example.invalid",
+        "phone": "+1-202-555-0101",
+        "location": "Denver, Colorado, USA",
+        "is_manager": true,
+        "manager_id": null,
+        "notes": [],
+        "created_at": "2026-01-08T12:00:00.000Z",
+        "updated_at": "2026-01-08T12:00:00.000Z"
+      },
+      {
+        "id": 2,
+        "partner_id": 1,
+        "name": "Taylor Partner",
+        "function": "Solutions Architect",
+        "email": "taylor.partner@example.invalid",
+        "phone": "+1-202-555-0102",
+        "location": "Austin, Texas, USA",
+        "is_manager": false,
+        "manager_id": 1,
+        "notes": [],
+        "created_at": "2026-01-09T12:00:00.000Z",
+        "updated_at": "2026-01-09T12:00:00.000Z"
+      }
+    ],
+    "internalResources": [
+      {
+        "id": 1,
+        "name": "Morgan Internal",
+        "function": "Solutions Engineering",
+        "email": "morgan.internal@example.invalid",
+        "phone": "+1-202-555-0103",
+        "location": "Chicago, Illinois, USA",
+        "is_manager": true,
+        "manager_id": null,
+        "notes": [],
+        "org_id": 1,
+        "created_at": "2026-01-08T12:00:00.000Z",
+        "updated_at": "2026-01-08T12:00:00.000Z"
+      },
+      {
+        "id": 2,
+        "name": "Casey Internal",
+        "function": "Account Executive",
+        "email": "casey.internal@example.invalid",
+        "phone": "+1-202-555-0104",
+        "location": "Boston, Massachusetts, USA",
+        "is_manager": false,
+        "manager_id": 1,
+        "notes": [],
+        "org_id": 1,
+        "created_at": "2026-01-09T12:00:00.000Z",
+        "updated_at": "2026-01-09T12:00:00.000Z"
+      }
+    ],
+    "opportunities": [
+      {
+        "id": 1,
+        "name": "Example Industries modernization",
+        "type": "opportunity",
+        "partner_id": 1,
+        "owner_id": 2,
+        "stage": "Discovery",
+        "country": "United States",
+        "date_in": "2026-01-12",
+        "hpe_team": "Demo Team",
+        "partner_contact": "Jordan Partner",
+        "partner_contact_role": "Alliance Director",
+        "num_endpoints": 2400,
+        "use_case": "Fictional infrastructure modernization",
+        "end_customer": "Example Industries",
+        "end_customer_domain": "example.invalid",
+        "revenue_value": "125000.00",
+        "close_date": "2026-09-30",
+        "description": "Fictional opportunity used to test relationship mapping and migration screens.",
+        "notes": [
+          {
+            "id": "opportunity-note-1",
+            "text": "Fictional opportunity note.",
+            "createdAt": "2026-01-15T12:00:00.000Z"
+          }
+        ],
+        "contacts": [
+          {
+            "id": "customer-contact-1",
+            "name": "Alex Customer",
+            "email": "alex.customer@example.invalid",
+            "phone": "+1-202-555-0105",
+            "role": "VP of Technology",
+            "location": "Seattle, Washington, USA",
+            "org": "Customer",
+            "directoryRef": null,
+            "createdAt": "2026-01-15T12:00:00.000Z"
+          },
+          {
+            "id": "partner-contact-1",
+            "name": "Jordan Partner",
+            "email": "jordan.partner@example.invalid",
+            "phone": "+1-202-555-0101",
+            "role": "Alliance Director",
+            "location": "Denver, Colorado, USA",
+            "org": "Partner",
+            "directoryRef": "partner:1",
+            "createdAt": "2026-01-15T12:00:00.000Z"
+          }
+        ],
+        "meddpicc_score": "22.20",
+        "closed_won_at": null,
+        "created_at": "2026-01-12T12:00:00.000Z",
+        "updated_at": "2026-01-15T12:00:00.000Z"
+      },
+      {
+        "id": 2,
+        "name": "Fictional analytics initiative",
+        "type": "initiative",
+        "partner_id": 1,
+        "owner_id": 2,
+        "stage": "Qualify",
+        "country": "Canada",
+        "date_in": "2026-02-01",
+        "hpe_team": "Demo Team",
+        "partner_contact": "Taylor Partner",
+        "partner_contact_role": "Solutions Architect",
+        "num_endpoints": 800,
+        "use_case": "Fictional analytics platform",
+        "end_customer": "Contoso Demo Group",
+        "end_customer_domain": "contoso.example.invalid",
+        "revenue_value": "68000.00",
+        "close_date": "2026-11-15",
+        "description": "Second fictional record for list and filter testing.",
+        "notes": [],
+        "contacts": [],
+        "meddpicc_score": "0.00",
+        "closed_won_at": null,
+        "created_at": "2026-02-01T12:00:00.000Z",
+        "updated_at": "2026-02-01T12:00:00.000Z"
+      }
+    ],
+    "meddpiccEntries": [
+      {
+        "id": 1,
+        "opportunity_id": 1,
+        "element": "metrics",
+        "content": "Fictional customer target: reduce operating effort by 20 percent.",
+        "customer_validated": true,
+        "relevance_score": 4,
+        "created_at": "2026-01-16T12:00:00.000Z",
+        "updated_at": "2026-01-16T12:00:00.000Z"
+      },
+      {
+        "id": 2,
+        "opportunity_id": 1,
+        "element": "champion",
+        "content": "Alex Customer is a fictional internal advocate who requested a technical workshop.",
+        "customer_validated": false,
+        "relevance_score": 3,
+        "created_at": "2026-01-17T12:00:00.000Z",
+        "updated_at": "2026-01-17T12:00:00.000Z"
+      }
+    ],
+    "meddpiccSectionMeta": [
+      {
+        "id": 1,
+        "opportunity_id": 1,
+        "element": "champion",
+        "notes": [
+          {
+            "id": "section-note-1",
+            "text": "Fictional section note.",
+            "createdAt": "2026-01-17T12:00:00.000Z"
+          }
+        ],
+        "contact_ids": [
+          "customer-contact-1"
+        ],
+        "owner_id": "customer-contact-1",
+        "created_at": "2026-01-17T12:00:00.000Z",
+        "updated_at": "2026-01-17T12:00:00.000Z"
+      }
+    ],
+    "companyResearch": [
+      {
+        "id": 1,
+        "opportunity_id": 1,
+        "company_name": "Example Industries",
+        "company_domain": "example.invalid",
+        "industry": "Fictional manufacturing",
+        "location": "Seattle, Washington, USA",
+        "overview": "Fictional public-company context used only to exercise the WordPress presentation layer.",
+        "sections": [
+          {
+            "element": "metrics",
+            "summary": "Fictional presentation-only context for the metrics section.",
+            "sources": [
+              {
+                "title": "Fictional source",
+                "url": "https://example.com"
+              }
+            ]
+          }
+        ],
+        "status": "ready",
+        "error": null,
+        "generated_at": "2026-01-18T12:00:00.000Z",
+        "created_at": "2026-01-18T12:00:00.000Z",
+        "updated_at": "2026-01-18T12:00:00.000Z"
+      }
+    ],
+    "reminders": [
+      {
+        "id": 1,
+        "user_id": 2,
+        "name": "Fictional discovery follow-up",
+        "due_at": "2026-02-15T15:00:00.000Z",
+        "entity_type": "opportunity",
+        "entity_id": "1",
+        "entity_label": "Example Industries modernization",
+        "notes": "Fictional reminder note.",
+        "completed_at": null,
+        "created_at": "2026-01-20T12:00:00.000Z"
+      }
+    ],
+    "profiles": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "revenue_metric": "ACV",
+        "fiscal_year_start": "1",
+        "fiscal_year_end": "12",
+        "quota": "1000000.00",
+        "q1_goal_pct": "25",
+        "q2_goal_pct": "25",
+        "q3_goal_pct": "25",
+        "q4_goal_pct": "25",
+        "created_at": "2026-01-05T12:00:00.000Z",
+        "updated_at": "2026-01-05T12:00:00.000Z"
+      },
+      {
+        "id": 2,
+        "user_id": 2,
+        "revenue_metric": "ACV",
+        "fiscal_year_start": "1",
+        "fiscal_year_end": "12",
+        "quota": "500000.00",
+        "q1_goal_pct": "25",
+        "q2_goal_pct": "25",
+        "q3_goal_pct": "25",
+        "q4_goal_pct": "25",
+        "created_at": "2026-01-06T12:00:00.000Z",
+        "updated_at": "2026-01-06T12:00:00.000Z"
+      }
+    ]
+  }
+}

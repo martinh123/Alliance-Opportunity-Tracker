@@ -17,6 +17,9 @@ wordpress-migration/config/env-vars-list.txt
 wordpress-migration/config/.npmrc
 wordpress-migration/config/.replit
 wordpress-migration/config/.replitignore
+wordpress-migration/database-reference/EXPORT-LIMITATIONS.md
+wordpress-migration/database-reference/README.md
+wordpress-migration/database-reference/sanitized-admin-export-v2.json
 wordpress-migration/docs/MIGRATION-NOTES.md
 wordpress-migration/README.md
 wordpress-migration/reference/gsi-current-database-schema.json

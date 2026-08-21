@@ -23,6 +23,8 @@ The migration reference tree was created and published to the repository's `main
 - The tree has no `.env` file, password hashes, API keys, session secrets, cookies, private keys, build output, or dependency directories.
 - A WXR/XML export was not found. Do not wait for one: this is a custom table and REST migration, not a WordPress content import.
 - No production data is included. Create only fictional fixtures if the new WordPress project needs test data.
+- A sanitized administrator-export-shaped JSON fixture is available at `wordpress-migration/database-reference/sanitized-admin-export-v2.json`.
+- That fixture preserves the version-2 export keys, entity relationships, JSON shapes, and representative fields without publishing real rows or credentials.
 
 The exact file inventory is in:
 
@@ -78,6 +80,8 @@ Map the API behavior to custom WordPress REST endpoints under `/wp-json/gsi/v1/`
 - Current schema SQL: `wordpress-migration/reference/gsi-current-database-schema.sql`
 - Current schema documentation: `wordpress-migration/reference/gsi-current-database-schema.md`
 - Database file inventory: `wordpress-migration/reference/lib-db-file-list.txt`
+- Sanitized admin-export-shaped fixture: `wordpress-migration/database-reference/sanitized-admin-export-v2.json`
+- Fixture limitations: `wordpress-migration/database-reference/EXPORT-LIMITATIONS.md`
 
 Recreate this model as custom WordPress tables. Use `$wpdb` prepared statements or an equally safe database abstraction. Preserve foreign-key relationships, organization ownership, server-side validations, import behavior, and audit timestamps.
 
