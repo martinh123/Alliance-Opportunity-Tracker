@@ -35,14 +35,15 @@ The exact file inventory is in:
 1. `wordpress-migration/README.md`
 2. `wordpress-migration/docs/MIGRATION-NOTES.md`
 3. `wordpress-migration/docs/COPILOT-COMPLETE-TRANSFER-INVENTORY.md`
-4. `wordpress-migration/reference/manifest.txt`
-5. `wordpress-migration/reference/gsi-wordpress-build-spec.html`
-6. `wordpress-migration/reference/gsi-current-database-schema.md`
-7. `wordpress-migration/reference/gsi-current-database-schema.sql`
-8. `wordpress-migration/reference/gsi-current-database-schema.json`
-9. `wordpress-migration/reference/gsi-route-map.json`
-10. `wordpress-migration/reference/openapi.yaml`
-11. `wordpress-migration/reference/repo-tree.txt`
+4. `wordpress-migration/docs/COPILOT-COMPLIANCE-PROMPT.md`
+5. `wordpress-migration/reference/manifest.txt`
+6. `wordpress-migration/reference/gsi-wordpress-build-spec.html`
+7. `wordpress-migration/reference/gsi-current-database-schema.md`
+8. `wordpress-migration/reference/gsi-current-database-schema.sql`
+9. `wordpress-migration/reference/gsi-current-database-schema.json`
+10. `wordpress-migration/reference/gsi-route-map.json`
+11. `wordpress-migration/reference/openapi.yaml`
+12. `wordpress-migration/reference/repo-tree.txt`
 
 Then inspect the exact source locations below. Source code is the authority when documentation and a UI reference differ.
 

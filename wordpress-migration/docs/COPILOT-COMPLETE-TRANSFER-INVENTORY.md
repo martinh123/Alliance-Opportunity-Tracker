@@ -130,6 +130,9 @@ The same names are listed in:
 
 - `wordpress-migration/config/env-vars-list.txt`
 - `wordpress-migration/config/.env.example`
+- `wordpress-migration/config/.env.dev.example` — requested development
+  placeholders for `POSTGRES_*`, `GEO_*`, and `AI_*` names, plus the original
+  runtime names
 
 The destination WordPress build should use native WordPress authentication,
 nonces, roles, capabilities, and secure cookies. It must not reuse the original
@@ -168,6 +171,11 @@ The frontend requires `PORT` and `BASE_PATH`. The API requires its configured
 database connection and the environment names listed above. The API `dev`
 script builds first and then starts the generated `dist/index.mjs`.
 
+Fresh managed-workflow output, including the exact Replit commands and runtime
+flags, is captured in:
+
+`wordpress-migration/reference/replit-fresh-start-log.txt`
+
 For SiteGround, these Node commands are source-reference checks only. The
 production target is a custom WordPress PHP application: activate the
 must-use plugin, activate the custom theme, configure the SiteGround database
@@ -190,14 +198,23 @@ including opportunities, partners, users/organizations, partner resources,
 internal resources, MEDDPICC tables, company research, reminders, and
 geocode cache.
 
-For test/import development, use:
+For complete table-shaped fixture development, use:
+
+`wordpress-migration/database/sanitized-postgresql-table-export-v1.json`
+
+This fixture contains representative fictional rows for every source table,
+including organizations, users, partners, contacts, opportunities, MEDDPICC,
+company research, reminders, geocode cache, and data-migration history.
+
+For source administrator-import behavior, use:
 
 `wordpress-migration/database-reference/sanitized-admin-export-v2.json`
 
-This is a valid version-2 administrator-export-shaped fixture. It preserves
-entity names, fields, JSON shapes, relationships, and representative values,
-but all records are fictional and credential fields are explicit redactions.
-See `wordpress-migration/database-reference/EXPORT-LIMITATIONS.md`.
+This is the source application's valid version-2 administrator-export-shaped
+fixture. Both JSON files preserve entity names, fields, JSON shapes,
+relationships, and representative values, but all records are fictional and
+credential fields are explicit redactions. See
+`wordpress-migration/database-reference/EXPORT-LIMITATIONS.md`.
 
 Therefore the WordPress migration should start with a fresh SiteGround
 WordPress database and use fictional seed content only while building and
@@ -310,6 +327,10 @@ the public namespace from `/api` to `/wp-json/gsi/v1/`.
 - API contract: `wordpress-migration/reference/openapi.yaml`
 - Route map: `wordpress-migration/reference/gsi-route-map.json`
 - Full manifest: `wordpress-migration/reference/manifest.txt`
+- Fresh Replit startup capture: `wordpress-migration/reference/replit-fresh-start-log.txt`
 - Source architecture notes: `wordpress-migration/docs/MIGRATION-NOTES.md`
+- Final compliance prompt: `wordpress-migration/docs/COPILOT-COMPLIANCE-PROMPT.md`
+- Table-shaped sanitized fixture:
+  `wordpress-migration/database/sanitized-postgresql-table-export-v1.json`
 - Sanitized admin-export fixture:
   `wordpress-migration/database-reference/sanitized-admin-export-v2.json`

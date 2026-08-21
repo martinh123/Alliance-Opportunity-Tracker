@@ -1,0 +1,58 @@
+Fresh Replit workflow startup capture
+Captured after restarting the managed frontend and API workflows on 2026-08-21.
+
+Frontend workflow command configured by Replit:
+pnpm --filter @workspace/gsi-tracker run dev
+
+Frontend output:
+
+> @workspace/gsi-tracker@0.0.0 dev /home/runner/workspace/artifacts/gsi-tracker
+> vite --config vite.config.ts --host 0.0.0.0
+
+[replit-cartographer] Loaded @theme tokens from /home/runner/workspace/artifacts/gsi-tracker/src/index.css
+
+  VITE v7.3.3  ready in 1588 ms
+
+  ➜  Local:   http://localhost:19844/
+  ➜  Network: http://172.24.0.2:19844/
+  ➜  press h + enter to show help
+
+API workflow command configured by Replit:
+pnpm --filter @workspace/api-server run dev
+
+API output:
+
+> @workspace/api-server@0.0.0 dev /home/runner/workspace/artifacts/api-server
+> export NODE_ENV=development && pnpm run build && pnpm run start
+
+> @workspace/api-server@0.0.0 build /home/runner/workspace/artifacts/api-server
+> node ./build.mjs
+
+  dist/index.mjs                       2.8mb ⚠️
+  dist/pino-worker.mjs               153.4kb
+  dist/pino-file.mjs                 142.1kb
+  dist/pino-pretty.mjs               114.6kb
+  dist/thread-stream-worker.mjs        7.3kb
+  dist/index.mjs.map                   4.6mb
+  dist/pino-worker.mjs.map           256.9kb
+  dist/pino-file.mjs                 229.0kb
+  dist/pino-pretty.mjs               204.0kb
+  dist/thread-stream-worker.mjs.map   12.0kb
+
+⚡ Done in 961ms
+
+> @workspace/api-server@0.0.0 start /home/runner/workspace/artifacts/api-server
+> node --enable-source-maps ./dist/index.mjs
+
+[18:00:22.682] INFO: MCP DB objects verified
+[18:00:22.690] INFO: Server listening
+    port: 8080
+
+Notes:
+
+- The frontend workflow receives PORT=19844 and BASE_PATH=/ from its managed
+  Replit artifact configuration.
+- The API workflow receives PORT=8080 from its managed Replit artifact
+  configuration.
+- The normal post-start GET / readiness probes received HTTP 404 because the
+  API is mounted under /api and its health endpoint is /api/healthz.

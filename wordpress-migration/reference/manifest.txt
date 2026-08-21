@@ -12,6 +12,7 @@ wordpress-migration/assets/gsi-svg-screens/08-profile.svg
 wordpress-migration/assets/gsi-svg-screens/09-not-found.svg
 wordpress-migration/assets/gsi-svg-screens/README.txt
 wordpress-migration/assets/screenshots/gsi-login-live.jpg
+wordpress-migration/config/.env.dev.example
 wordpress-migration/config/.env.example
 wordpress-migration/config/env-vars-list.txt
 wordpress-migration/config/.npmrc
@@ -20,7 +21,9 @@ wordpress-migration/config/.replitignore
 wordpress-migration/database-reference/EXPORT-LIMITATIONS.md
 wordpress-migration/database-reference/README.md
 wordpress-migration/database-reference/sanitized-admin-export-v2.json
+wordpress-migration/database/sanitized-postgresql-table-export-v1.json
 wordpress-migration/docs/COPILOT-COMPLETE-TRANSFER-INVENTORY.md
+wordpress-migration/docs/COPILOT-COMPLIANCE-PROMPT.md
 wordpress-migration/docs/MIGRATION-NOTES.md
 wordpress-migration/README.md
 wordpress-migration/reference/gsi-current-database-schema.json
@@ -36,6 +39,7 @@ wordpress-migration/reference/openapi.yaml
 wordpress-migration/reference/package.json
 wordpress-migration/reference/pnpm-lock.yaml
 wordpress-migration/reference/pnpm-workspace.yaml
+wordpress-migration/reference/replit-fresh-start-log.txt
 wordpress-migration/reference/repo-tree.txt
 wordpress-migration/reference/tsconfig.base.json
 wordpress-migration/reference/tsconfig.json

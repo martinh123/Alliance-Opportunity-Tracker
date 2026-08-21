@@ -1,0 +1,411 @@
+{
+  "format": "gsi-postgresql-table-export/v1",
+  "sanitized": true,
+  "source": "fictional development fixture; not a production backup",
+  "exportedAt": "2026-08-21T18:00:00.000Z",
+  "schemaReference": "../reference/gsi-current-database-schema.sql",
+  "important": [
+    "All people, organizations, companies, emails, phones, research, notes, and locations are fictional.",
+    "password_hash and mcp_key values are nonfunctional redaction markers.",
+    "This table-shaped JSON fixture includes representative rows for every source table and must not be used to restore a live environment."
+  ],
+  "tables": {
+    "organizations": [
+      {
+        "id": 1001,
+        "name": "Northstar Alliance Demo",
+        "mcp_key": "[REDACTED: nonfunctional demo marker]",
+        "created_at": "2026-01-05T09:00:00.000Z"
+      }
+    ],
+    "users": [
+      {
+        "id": 1101,
+        "email": "maya.admin@example.test",
+        "password_hash": "[REDACTED: do not import into WordPress]",
+        "name": "Maya Chen",
+        "role": "admin",
+        "quota": "750000.00",
+        "region": "North America",
+        "org_id": 1001,
+        "created_at": "2026-01-05T09:05:00.000Z",
+        "updated_at": "2026-08-18T14:20:00.000Z"
+      },
+      {
+        "id": 1102,
+        "email": "devon.rep@example.test",
+        "password_hash": "[REDACTED: do not import into WordPress]",
+        "name": "Devon Rivera",
+        "role": "rep",
+        "quota": "500000.00",
+        "region": "North America",
+        "org_id": 1001,
+        "created_at": "2026-02-12T10:15:00.000Z",
+        "updated_at": "2026-08-19T09:45:00.000Z"
+      }
+    ],
+    "profiles": [
+      {
+        "id": 1151,
+        "user_id": 1101,
+        "revenue_metric": "ACV",
+        "fiscal_year_start": "1",
+        "fiscal_year_end": "12",
+        "quota": "750000.00",
+        "q1_goal_pct": "20.00",
+        "q2_goal_pct": "25.00",
+        "q3_goal_pct": "25.00",
+        "q4_goal_pct": "30.00",
+        "created_at": "2026-01-05T09:05:00.000Z",
+        "updated_at": "2026-01-05T09:05:00.000Z"
+      },
+      {
+        "id": 1152,
+        "user_id": 1102,
+        "revenue_metric": "ACV",
+        "fiscal_year_start": "1",
+        "fiscal_year_end": "12",
+        "quota": "500000.00",
+        "q1_goal_pct": "25.00",
+        "q2_goal_pct": "25.00",
+        "q3_goal_pct": "25.00",
+        "q4_goal_pct": "25.00",
+        "created_at": "2026-02-12T10:15:00.000Z",
+        "updated_at": "2026-02-12T10:15:00.000Z"
+      }
+    ],
+    "partners": [
+      {
+        "id": 1201,
+        "name": "Blue Harbor Systems",
+        "tier": "Strategic",
+        "region": "North America",
+        "contact_name": "Priya Shah",
+        "contact_email": "priya.shah@example.test",
+        "primary_contact_id": 1301,
+        "notes": [
+          {
+            "id": "note-partner-1201",
+            "text": "Fictional strategic partner record for importer testing.",
+            "createdAt": "2026-06-10T12:00:00.000Z"
+          }
+        ],
+        "revenue_target": "400000.00",
+        "org_id": 1001,
+        "created_at": "2026-01-10T11:00:00.000Z",
+        "updated_at": "2026-08-19T10:00:00.000Z"
+      },
+      {
+        "id": 1202,
+        "name": "Summit Bridge Consulting",
+        "tier": "Growth",
+        "region": "EMEA",
+        "contact_name": "Elliot Morgan",
+        "contact_email": "elliot.morgan@example.test",
+        "primary_contact_id": 1303,
+        "notes": [],
+        "revenue_target": "250000.00",
+        "org_id": 1001,
+        "created_at": "2026-03-03T15:30:00.000Z",
+        "updated_at": "2026-08-14T08:30:00.000Z"
+      }
+    ],
+    "internal_resources": [
+      {
+        "id": 1401,
+        "name": "Jordan Lee",
+        "function": "Solutions Architect",
+        "email": "jordan.lee@example.test",
+        "phone": "+1-555-0101",
+        "location": "Boston, MA",
+        "is_manager": true,
+        "manager_id": null,
+        "notes": [],
+        "org_id": 1001,
+        "created_at": "2026-01-08T09:00:00.000Z",
+        "updated_at": "2026-08-08T09:00:00.000Z"
+      },
+      {
+        "id": 1402,
+        "name": "Taylor Brooks",
+        "function": "Sales Engineer",
+        "email": "taylor.brooks@example.test",
+        "phone": "+1-555-0102",
+        "location": "Austin, TX",
+        "is_manager": false,
+        "manager_id": 1401,
+        "notes": [
+          {
+            "id": "note-internal-1402",
+            "text": "Fictional resource note.",
+            "createdAt": "2026-07-02T10:30:00.000Z"
+          }
+        ],
+        "org_id": 1001,
+        "created_at": "2026-02-08T09:00:00.000Z",
+        "updated_at": "2026-08-09T09:00:00.000Z"
+      }
+    ],
+    "partner_resources": [
+      {
+        "id": 1301,
+        "partner_id": 1201,
+        "name": "Priya Shah",
+        "function": "Alliance Director",
+        "email": "priya.shah@example.test",
+        "phone": "+1-555-0103",
+        "location": "New York, NY",
+        "is_manager": true,
+        "manager_id": null,
+        "notes": [],
+        "created_at": "2026-01-10T11:00:00.000Z",
+        "updated_at": "2026-08-01T11:00:00.000Z"
+      },
+      {
+        "id": 1302,
+        "partner_id": 1201,
+        "name": "Marcus Bell",
+        "function": "Practice Lead",
+        "email": "marcus.bell@example.test",
+        "phone": "+1-555-0104",
+        "location": "Chicago, IL",
+        "is_manager": false,
+        "manager_id": 1301,
+        "notes": [],
+        "created_at": "2026-02-01T12:00:00.000Z",
+        "updated_at": "2026-08-01T12:00:00.000Z"
+      },
+      {
+        "id": 1303,
+        "partner_id": 1202,
+        "name": "Elliot Morgan",
+        "function": "Managing Partner",
+        "email": "elliot.morgan@example.test",
+        "phone": "+44-20-7946-0105",
+        "location": "London, UK",
+        "is_manager": true,
+        "manager_id": null,
+        "notes": [],
+        "created_at": "2026-03-03T15:30:00.000Z",
+        "updated_at": "2026-08-14T08:30:00.000Z"
+      }
+    ],
+    "opportunities": [
+      {
+        "id": 1501,
+        "name": "Aster Labs Data Platform Expansion",
+        "type": "opportunity",
+        "partner_id": 1201,
+        "owner_id": 1102,
+        "stage": "Validate",
+        "country": "United States",
+        "date_in": "2026-05-20",
+        "hpe_team": "Data and AI",
+        "partner_contact": "Priya Shah",
+        "partner_contact_role": "Alliance Director",
+        "num_endpoints": 850,
+        "use_case": "Modernize the analytics platform and improve data governance.",
+        "end_customer": "Aster Labs",
+        "end_customer_domain": "aster-labs.example.test",
+        "revenue_value": "185000.00",
+        "close_date": "2026-11-30",
+        "description": "Fictional opportunity demonstrating a multi-stakeholder enterprise sale.",
+        "notes": [
+          {
+            "id": "note-opp-1501",
+            "text": "Confirm pilot acceptance criteria before the executive review.",
+            "createdAt": "2026-08-12T14:00:00.000Z"
+          }
+        ],
+        "contacts": [
+          {
+            "id": "contact-aster-1",
+            "name": "Avery Stone",
+            "role": "VP Data",
+            "email": "avery.stone@example.test",
+            "location": "Boston, MA"
+          },
+          {
+            "id": "contact-aster-2",
+            "name": "Noah Grant",
+            "role": "Procurement Director",
+            "email": "noah.grant@example.test",
+            "location": "New York, NY"
+          }
+        ],
+        "meddpicc_score": "56.00",
+        "closed_won_at": null,
+        "created_at": "2026-05-20T13:00:00.000Z",
+        "updated_at": "2026-08-20T16:30:00.000Z"
+      },
+      {
+        "id": 1502,
+        "name": "Northwind Services Cloud Readiness Initiative",
+        "type": "initiative",
+        "partner_id": 1202,
+        "owner_id": 1101,
+        "stage": "Qualify",
+        "country": "United Kingdom",
+        "date_in": "2026-06-08",
+        "hpe_team": "Hybrid Cloud",
+        "partner_contact": "Elliot Morgan",
+        "partner_contact_role": "Managing Partner",
+        "num_endpoints": 0,
+        "use_case": "Joint account mapping and cloud-readiness workshop.",
+        "end_customer": "Northwind Services",
+        "end_customer_domain": "northwind-services.example.test",
+        "revenue_value": "0.00",
+        "close_date": "2026-12-15",
+        "description": "Fictional initiative record used to verify the opportunity/initiative type distinction.",
+        "notes": [],
+        "contacts": [
+          {
+            "id": "contact-northwind-1",
+            "name": "Riley Adams",
+            "role": "IT Transformation Lead",
+            "email": "riley.adams@example.test",
+            "location": "London, UK"
+          }
+        ],
+        "meddpicc_score": "0.00",
+        "closed_won_at": null,
+        "created_at": "2026-06-08T08:00:00.000Z",
+        "updated_at": "2026-08-16T11:45:00.000Z"
+      }
+    ],
+    "meddpicc_entries": [
+      {
+        "id": 1601,
+        "opportunity_id": 1501,
+        "element": "metrics",
+        "content": "Fictional target: reduce manual report preparation by 35 percent.",
+        "customer_validated": true,
+        "relevance_score": 5,
+        "created_at": "2026-06-01T09:30:00.000Z",
+        "updated_at": "2026-08-12T14:00:00.000Z"
+      },
+      {
+        "id": 1602,
+        "opportunity_id": 1501,
+        "element": "economic_buyer",
+        "content": "Fictional executive sponsor identified; budget discussion is pending.",
+        "customer_validated": false,
+        "relevance_score": 4,
+        "created_at": "2026-06-04T11:00:00.000Z",
+        "updated_at": "2026-08-13T10:00:00.000Z"
+      },
+      {
+        "id": 1603,
+        "opportunity_id": 1501,
+        "element": "identify_pain",
+        "content": "Fictional pain: inconsistent data quality delays quarterly planning.",
+        "customer_validated": true,
+        "relevance_score": 5,
+        "created_at": "2026-06-06T15:00:00.000Z",
+        "updated_at": "2026-08-10T15:00:00.000Z"
+      },
+      {
+        "id": 1604,
+        "opportunity_id": 1501,
+        "element": "champion",
+        "content": "Fictional operational champion supports a time-boxed pilot.",
+        "customer_validated": false,
+        "relevance_score": 4,
+        "created_at": "2026-06-07T15:00:00.000Z",
+        "updated_at": "2026-08-10T15:00:00.000Z"
+      }
+    ],
+    "meddpicc_section_meta": [
+      {
+        "id": 1701,
+        "opportunity_id": 1501,
+        "element": "metrics",
+        "notes": [
+          {
+            "id": "note-meta-1701",
+            "text": "Validate the baseline during the workshop.",
+            "createdAt": "2026-08-12T14:00:00.000Z"
+          }
+        ],
+        "contact_ids": [
+          "contact-aster-1"
+        ],
+        "owner_id": "1102",
+        "created_at": "2026-06-01T09:30:00.000Z",
+        "updated_at": "2026-08-12T14:00:00.000Z"
+      }
+    ],
+    "company_research": [
+      {
+        "id": 1801,
+        "opportunity_id": 1501,
+        "company_name": "Aster Labs",
+        "company_domain": "aster-labs.example.test",
+        "industry": "Fictional life sciences analytics",
+        "location": "Boston, MA",
+        "overview": "Fictional research summary for migration and UI testing only. It is not generated from, or about, a real company.",
+        "sections": [
+          {
+            "element": "metrics",
+            "content": "Fictional public-context note for the metrics discussion.",
+            "sources": [
+              {
+                "title": "Fictional investor update",
+                "url": "https://example.test/aster-labs/investor-update"
+              }
+            ]
+          }
+        ],
+        "status": "ready",
+        "error": null,
+        "generated_at": "2026-08-15T16:00:00.000Z",
+        "created_at": "2026-08-15T16:00:00.000Z",
+        "updated_at": "2026-08-15T16:00:00.000Z"
+      }
+    ],
+    "reminders": [
+      {
+        "id": 1901,
+        "user_id": 1102,
+        "name": "Confirm the Aster Labs pilot agenda",
+        "due_at": "2026-08-28T15:00:00.000Z",
+        "entity_type": "opportunity",
+        "entity_id": "1501",
+        "entity_label": "Aster Labs Data Platform Expansion",
+        "notes": "Fictional follow-up reminder.",
+        "completed_at": null,
+        "created_at": "2026-08-20T12:00:00.000Z"
+      }
+    ],
+    "geocode_cache": [
+      {
+        "id": 2001,
+        "query": "boston ma",
+        "canonical_name": "Boston, Massachusetts, United States",
+        "lat": 42.3601,
+        "lon": -71.0589,
+        "resolved": true,
+        "source": "nominatim",
+        "created_at": "2026-08-01T10:00:00.000Z",
+        "updated_at": "2026-08-01T10:00:00.000Z"
+      },
+      {
+        "id": 2002,
+        "query": "fictional unknown place",
+        "canonical_name": null,
+        "lat": null,
+        "lon": null,
+        "resolved": false,
+        "source": "nominatim",
+        "created_at": "2026-08-02T10:00:00.000Z",
+        "updated_at": "2026-08-02T10:00:00.000Z"
+      }
+    ],
+    "data_migrations": [
+      {
+        "name": "0003_extract_contact_locations",
+        "applied_at": "2026-08-07T12:00:00.000Z"
+      }
+    ]
+  }
+}
