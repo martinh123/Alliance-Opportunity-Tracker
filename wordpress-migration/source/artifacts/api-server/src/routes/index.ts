@@ -1,0 +1,40 @@
+import { Router, type IRouter } from "express";
+import healthRouter from "./health";
+import authRouter from "./auth";
+import usersRouter from "./users";
+import profileRouter from "./profile";
+import partnersRouter from "./partners";
+import internalResourcesRouter from "./internalResources";
+import partnerResourcesRouter from "./partnerResources";
+import peopleRouter from "./people";
+import opportunitiesRouter from "./opportunities";
+import meddpiccRouter from "./meddpicc";
+import meddpiccSectionsRouter from "./meddpiccSections";
+import dashboardRouter from "./dashboard";
+import companyRouter from "./company";
+import backupRouter from "./backup";
+import orgExportRouter from "./org-export";
+import remindersRouter from "./reminders";
+import mcpRouter from "./mcp";
+
+const router: IRouter = Router();
+
+router.use(healthRouter);
+router.use(authRouter);
+router.use(usersRouter);
+router.use(profileRouter);
+router.use(partnersRouter);
+router.use(internalResourcesRouter);
+router.use(partnerResourcesRouter);
+router.use(peopleRouter);
+router.use(opportunitiesRouter);
+router.use(meddpiccRouter);
+router.use(meddpiccSectionsRouter);
+router.use(dashboardRouter);
+router.use(companyRouter);
+router.use(backupRouter);
+router.use(orgExportRouter);
+router.use(remindersRouter);
+router.use(mcpRouter);
+
+export default router;

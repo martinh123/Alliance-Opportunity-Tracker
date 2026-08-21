@@ -1,0 +1,1055 @@
+{
+  "generatedAt": "2026-08-20",
+  "source": "lib/db/src/schema (Drizzle ORM)",
+  "dialect": "postgresql",
+  "coreTableCount": 12,
+  "migrationSupportTableCount": 1,
+  "tables": [
+    {
+      "name": "organizations",
+      "purpose": "Tenant / organization records, including the organization-level MCP key.",
+      "columns": [
+        [
+          "id",
+          "serial",
+          "NOT NULL, primary key",
+          ""
+        ],
+        [
+          "name",
+          "text",
+          "NOT NULL",
+          ""
+        ],
+        [
+          "mcp_key",
+          "text",
+          "nullable; unique constraint added by migration 0001",
+          ""
+        ],
+        [
+          "created_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ]
+      ],
+      "fks": []
+    },
+    {
+      "name": "users",
+      "purpose": "Application users and their organization membership.",
+      "columns": [
+        [
+          "id",
+          "serial",
+          "NOT NULL, primary key",
+          ""
+        ],
+        [
+          "email",
+          "text",
+          "NOT NULL, unique",
+          ""
+        ],
+        [
+          "password_hash",
+          "text",
+          "NOT NULL",
+          ""
+        ],
+        [
+          "name",
+          "text",
+          "NOT NULL",
+          ""
+        ],
+        [
+          "role",
+          "text",
+          "NOT NULL, default rep",
+          "admin | rep"
+        ],
+        [
+          "quota",
+          "numeric(15,2)",
+          "nullable",
+          ""
+        ],
+        [
+          "region",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "org_id",
+          "integer",
+          "nullable; no declared FK in current Drizzle source",
+          "organizations.id (logical)"
+        ],
+        [
+          "created_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ],
+        [
+          "updated_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ]
+      ],
+      "fks": []
+    },
+    {
+      "name": "profiles",
+      "purpose": "One profile/settings row per user.",
+      "columns": [
+        [
+          "id",
+          "serial",
+          "NOT NULL, primary key",
+          ""
+        ],
+        [
+          "user_id",
+          "integer",
+          "NOT NULL, unique",
+          "users.id ON DELETE CASCADE"
+        ],
+        [
+          "revenue_metric",
+          "text",
+          "NOT NULL, default ACV",
+          "ACV | TCV | ARR | Bookings"
+        ],
+        [
+          "fiscal_year_start",
+          "text",
+          "NOT NULL, default 1",
+          "month 1–12"
+        ],
+        [
+          "fiscal_year_end",
+          "text",
+          "NOT NULL, default 12",
+          "month 1–12"
+        ],
+        [
+          "quota",
+          "numeric(15,2)",
+          "nullable",
+          ""
+        ],
+        [
+          "q1_goal_pct",
+          "numeric(5,2)",
+          "nullable, default 25",
+          ""
+        ],
+        [
+          "q2_goal_pct",
+          "numeric(5,2)",
+          "nullable, default 25",
+          ""
+        ],
+        [
+          "q3_goal_pct",
+          "numeric(5,2)",
+          "nullable, default 25",
+          ""
+        ],
+        [
+          "q4_goal_pct",
+          "numeric(5,2)",
+          "nullable, default 25",
+          ""
+        ],
+        [
+          "created_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ],
+        [
+          "updated_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ]
+      ],
+      "fks": [
+        [
+          "user_id",
+          "users.id",
+          "CASCADE"
+        ]
+      ]
+    },
+    {
+      "name": "partners",
+      "purpose": "GSI partner organizations.",
+      "columns": [
+        [
+          "id",
+          "serial",
+          "NOT NULL, primary key",
+          ""
+        ],
+        [
+          "name",
+          "text",
+          "NOT NULL",
+          ""
+        ],
+        [
+          "tier",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "region",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "contact_name",
+          "text",
+          "nullable; legacy free-text",
+          ""
+        ],
+        [
+          "contact_email",
+          "text",
+          "nullable; legacy free-text",
+          ""
+        ],
+        [
+          "primary_contact_id",
+          "integer",
+          "nullable; no declared Drizzle FK",
+          "partner_resources.id (logical / SQL constraint referenced in source)"
+        ],
+        [
+          "notes",
+          "jsonb",
+          "NOT NULL, default []",
+          "Note[]"
+        ],
+        [
+          "revenue_target",
+          "numeric(15,2)",
+          "nullable",
+          ""
+        ],
+        [
+          "org_id",
+          "integer",
+          "nullable; no declared FK in current Drizzle source",
+          "organizations.id (logical)"
+        ],
+        [
+          "created_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ],
+        [
+          "updated_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ]
+      ],
+      "fks": []
+    },
+    {
+      "name": "internal_resources",
+      "purpose": "Internal people directory, optionally arranged in a manager hierarchy.",
+      "columns": [
+        [
+          "id",
+          "serial",
+          "NOT NULL, primary key",
+          ""
+        ],
+        [
+          "name",
+          "text",
+          "NOT NULL",
+          ""
+        ],
+        [
+          "function",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "email",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "phone",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "location",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "is_manager",
+          "boolean",
+          "NOT NULL, default false",
+          ""
+        ],
+        [
+          "manager_id",
+          "integer",
+          "nullable; no declared FK",
+          "internal_resources.id (logical)"
+        ],
+        [
+          "notes",
+          "jsonb",
+          "NOT NULL, default []",
+          "InternalResourceNote[]"
+        ],
+        [
+          "org_id",
+          "integer",
+          "nullable; no declared FK",
+          "organizations.id (logical)"
+        ],
+        [
+          "created_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ],
+        [
+          "updated_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ]
+      ],
+      "fks": []
+    },
+    {
+      "name": "partner_resources",
+      "purpose": "People directory for each GSI partner, optionally arranged in a manager hierarchy.",
+      "columns": [
+        [
+          "id",
+          "serial",
+          "NOT NULL, primary key",
+          ""
+        ],
+        [
+          "partner_id",
+          "integer",
+          "NOT NULL",
+          "partners.id ON DELETE CASCADE"
+        ],
+        [
+          "name",
+          "text",
+          "NOT NULL",
+          ""
+        ],
+        [
+          "function",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "email",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "phone",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "location",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "is_manager",
+          "boolean",
+          "NOT NULL, default false",
+          ""
+        ],
+        [
+          "manager_id",
+          "integer",
+          "nullable; no declared FK",
+          "partner_resources.id (logical)"
+        ],
+        [
+          "notes",
+          "jsonb",
+          "NOT NULL, default []",
+          "Note[]"
+        ],
+        [
+          "created_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ],
+        [
+          "updated_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ]
+      ],
+      "fks": [
+        [
+          "partner_id",
+          "partners.id",
+          "CASCADE"
+        ]
+      ]
+    },
+    {
+      "name": "opportunities",
+      "purpose": "Core opportunity and initiative records. Partner and owner are required.",
+      "columns": [
+        [
+          "id",
+          "serial",
+          "NOT NULL, primary key",
+          ""
+        ],
+        [
+          "name",
+          "text",
+          "NOT NULL",
+          ""
+        ],
+        [
+          "type",
+          "text",
+          "NOT NULL, default opportunity",
+          "opportunity | initiative"
+        ],
+        [
+          "partner_id",
+          "integer",
+          "NOT NULL",
+          "partners.id ON DELETE CASCADE"
+        ],
+        [
+          "owner_id",
+          "integer",
+          "NOT NULL",
+          "users.id"
+        ],
+        [
+          "stage",
+          "text",
+          "NOT NULL, default Qualify",
+          "Qualify | Discovery | Propose | Negotiate | Commit | ClosedWon | ClosedLost | Dormant"
+        ],
+        [
+          "country",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "date_in",
+          "date",
+          "nullable",
+          ""
+        ],
+        [
+          "hpe_team",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "partner_contact",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "partner_contact_role",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "num_endpoints",
+          "integer",
+          "nullable",
+          ""
+        ],
+        [
+          "use_case",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "end_customer",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "end_customer_domain",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "revenue_value",
+          "numeric(15,2)",
+          "nullable",
+          ""
+        ],
+        [
+          "close_date",
+          "date",
+          "nullable",
+          ""
+        ],
+        [
+          "description",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "notes",
+          "jsonb",
+          "NOT NULL, default []",
+          "OppNote[]"
+        ],
+        [
+          "contacts",
+          "jsonb",
+          "NOT NULL, default []",
+          "OppContact[]"
+        ],
+        [
+          "meddpicc_score",
+          "numeric(5,2)",
+          "nullable",
+          "server-computed weighted score"
+        ],
+        [
+          "closed_won_at",
+          "timestamptz",
+          "nullable",
+          "set on first ClosedWon transition"
+        ],
+        [
+          "created_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ],
+        [
+          "updated_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ]
+      ],
+      "fks": [
+        [
+          "partner_id",
+          "partners.id",
+          "CASCADE"
+        ],
+        [
+          "owner_id",
+          "users.id",
+          "NO ACTION"
+        ]
+      ]
+    },
+    {
+      "name": "meddpicc_entries",
+      "purpose": "Rep-authored MEDDPICC qualification entries per opportunity.",
+      "columns": [
+        [
+          "id",
+          "serial",
+          "NOT NULL, primary key",
+          ""
+        ],
+        [
+          "opportunity_id",
+          "integer",
+          "NOT NULL",
+          "opportunities.id ON DELETE CASCADE"
+        ],
+        [
+          "element",
+          "text",
+          "NOT NULL",
+          "Metrics / EconomicBuyer / DecisionCriteria / DecisionProcess / IdentifyPain / Champion / Competition / PaperProcess"
+        ],
+        [
+          "content",
+          "text",
+          "NOT NULL",
+          ""
+        ],
+        [
+          "customer_validated",
+          "boolean",
+          "NOT NULL, default false",
+          ""
+        ],
+        [
+          "relevance_score",
+          "integer",
+          "nullable",
+          "1–5"
+        ],
+        [
+          "created_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ],
+        [
+          "updated_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ]
+      ],
+      "fks": [
+        [
+          "opportunity_id",
+          "opportunities.id",
+          "CASCADE"
+        ]
+      ]
+    },
+    {
+      "name": "meddpicc_section_meta",
+      "purpose": "One per-opportunity, per-MEDDPICC-element working area.",
+      "columns": [
+        [
+          "id",
+          "serial",
+          "NOT NULL, primary key",
+          ""
+        ],
+        [
+          "opportunity_id",
+          "integer",
+          "NOT NULL",
+          "opportunities.id ON DELETE CASCADE"
+        ],
+        [
+          "element",
+          "text",
+          "NOT NULL",
+          "MEDDPICC element"
+        ],
+        [
+          "notes",
+          "jsonb",
+          "NOT NULL, default []",
+          "Note[]"
+        ],
+        [
+          "contact_ids",
+          "jsonb",
+          "NOT NULL, default []",
+          "string[]; identifiers in opportunity contacts JSON"
+        ],
+        [
+          "owner_id",
+          "text",
+          "nullable",
+          "identifier in opportunity contacts JSON"
+        ],
+        [
+          "created_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ],
+        [
+          "updated_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ]
+      ],
+      "fks": [
+        [
+          "opportunity_id",
+          "opportunities.id",
+          "CASCADE"
+        ]
+      ],
+      "unique": [
+        [
+          "meddpicc_section_meta_opp_element",
+          [
+            "opportunity_id",
+            "element"
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "company_research",
+      "purpose": "AI-synthesized company intelligence for one opportunity; presentation-only.",
+      "columns": [
+        [
+          "id",
+          "serial",
+          "NOT NULL, primary key",
+          ""
+        ],
+        [
+          "opportunity_id",
+          "integer",
+          "NOT NULL, unique",
+          "opportunities.id ON DELETE CASCADE"
+        ],
+        [
+          "company_name",
+          "text",
+          "NOT NULL",
+          ""
+        ],
+        [
+          "company_domain",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "industry",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "location",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "overview",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "sections",
+          "jsonb",
+          "NOT NULL, default []",
+          "CompanyResearchSection[]"
+        ],
+        [
+          "status",
+          "text",
+          "NOT NULL, default ready",
+          "ready | error"
+        ],
+        [
+          "error",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "generated_at",
+          "timestamptz",
+          "nullable",
+          ""
+        ],
+        [
+          "created_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ],
+        [
+          "updated_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ]
+      ],
+      "fks": [
+        [
+          "opportunity_id",
+          "opportunities.id",
+          "CASCADE"
+        ]
+      ]
+    },
+    {
+      "name": "reminders",
+      "purpose": "Personal reminders with optional generic entity association.",
+      "columns": [
+        [
+          "id",
+          "serial",
+          "NOT NULL, primary key",
+          ""
+        ],
+        [
+          "user_id",
+          "integer",
+          "NOT NULL",
+          "users.id ON DELETE CASCADE"
+        ],
+        [
+          "name",
+          "text",
+          "NOT NULL",
+          ""
+        ],
+        [
+          "due_at",
+          "timestamptz",
+          "NOT NULL",
+          ""
+        ],
+        [
+          "entity_type",
+          "text",
+          "nullable",
+          "generic association type"
+        ],
+        [
+          "entity_id",
+          "text",
+          "nullable",
+          "generic association identifier"
+        ],
+        [
+          "entity_label",
+          "text",
+          "nullable",
+          "generic association display label"
+        ],
+        [
+          "notes",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "completed_at",
+          "timestamptz",
+          "nullable",
+          "NULL = open"
+        ],
+        [
+          "created_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ]
+      ],
+      "fks": [
+        [
+          "user_id",
+          "users.id",
+          "CASCADE"
+        ]
+      ]
+    },
+    {
+      "name": "geocode_cache",
+      "purpose": "Server-side positive and negative geocoding cache for normalized free-text locations.",
+      "columns": [
+        [
+          "id",
+          "serial",
+          "NOT NULL, primary key",
+          ""
+        ],
+        [
+          "query",
+          "text",
+          "NOT NULL, unique",
+          "normalized / lowercased cache key"
+        ],
+        [
+          "canonical_name",
+          "text",
+          "nullable",
+          ""
+        ],
+        [
+          "lat",
+          "double precision",
+          "nullable",
+          ""
+        ],
+        [
+          "lon",
+          "double precision",
+          "nullable",
+          ""
+        ],
+        [
+          "resolved",
+          "boolean",
+          "NOT NULL, default false",
+          "false also stores negative cache entries"
+        ],
+        [
+          "source",
+          "text",
+          "nullable",
+          "nominatim | ai+nominatim | ai"
+        ],
+        [
+          "created_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ],
+        [
+          "updated_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ]
+      ],
+      "fks": []
+    },
+    {
+      "name": "data_migrations",
+      "purpose": "One-shot data migration tracking table created by migration 0003 when that migration is applied.",
+      "columns": [
+        [
+          "name",
+          "text",
+          "NOT NULL, primary key",
+          ""
+        ],
+        [
+          "applied_at",
+          "timestamptz",
+          "NOT NULL, default now()",
+          ""
+        ]
+      ],
+      "fks": [],
+      "migrationOnly": true
+    }
+  ],
+  "foreignKeys": [
+    {
+      "table": "profiles",
+      "column": "user_id",
+      "target": "users.id",
+      "action": "CASCADE"
+    },
+    {
+      "table": "partner_resources",
+      "column": "partner_id",
+      "target": "partners.id",
+      "action": "CASCADE"
+    },
+    {
+      "table": "opportunities",
+      "column": "partner_id",
+      "target": "partners.id",
+      "action": "CASCADE"
+    },
+    {
+      "table": "opportunities",
+      "column": "owner_id",
+      "target": "users.id",
+      "action": "NO ACTION"
+    },
+    {
+      "table": "meddpicc_entries",
+      "column": "opportunity_id",
+      "target": "opportunities.id",
+      "action": "CASCADE"
+    },
+    {
+      "table": "meddpicc_section_meta",
+      "column": "opportunity_id",
+      "target": "opportunities.id",
+      "action": "CASCADE"
+    },
+    {
+      "table": "company_research",
+      "column": "opportunity_id",
+      "target": "opportunities.id",
+      "action": "CASCADE"
+    },
+    {
+      "table": "reminders",
+      "column": "user_id",
+      "target": "users.id",
+      "action": "CASCADE"
+    }
+  ],
+  "logicalRelationships": [
+    {
+      "from": "users.org_id",
+      "to": "organizations.id"
+    },
+    {
+      "from": "partners.org_id",
+      "to": "organizations.id"
+    },
+    {
+      "from": "internal_resources.org_id",
+      "to": "organizations.id"
+    },
+    {
+      "from": "internal_resources.manager_id",
+      "to": "internal_resources.id"
+    },
+    {
+      "from": "partner_resources.manager_id",
+      "to": "partner_resources.id"
+    },
+    {
+      "from": "partners.primary_contact_id",
+      "to": "partner_resources.id"
+    }
+  ],
+  "migrationNotes": [
+    "0001_mcp_rls adds organizations.mcp_key uniqueness and RLS policies",
+    "0002_contact_location adds directory location fields",
+    "0003_extract_contact_locations creates data_migrations and performs one-time data cleanup",
+    "0004_geocode_cache creates geocode_cache"
+  ]
+}

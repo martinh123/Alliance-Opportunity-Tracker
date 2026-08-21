@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GSI Partner Opportunity Tracker — WordPress Build Specification</title>
+<style>
+  :root {
+    --accent: #1a56db;
+    --accent-light: #e8f0fe;
+    --border: #d1d5db;
+    --code-bg: #f3f4f6;
+    --warn-bg: #fef3c7;
+    --warn-border: #f59e0b;
+    --text: #111827;
+    --muted: #6b7280;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.65; color: var(--text); background: #fff; }
+  .cover { background: var(--accent); color: #fff; padding: 60px 48px 48px; }
+  .cover h1 { font-size: 32px; font-weight: 700; margin-bottom: 10px; }
+  .cover .sub { font-size: 16px; opacity: 0.85; max-width: 640px; margin-top: 8px; }
+  .cover .meta { margin-top: 24px; font-size: 13px; opacity: 0.7; }
+  .toc { background: var(--accent-light); border-left: 4px solid var(--accent); padding: 24px 32px; }
+  .toc h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); margin-bottom: 12px; }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin: 4px 0; }
+  .toc a { color: var(--accent); text-decoration: none; font-size: 14px; }
+  .toc a:hover { text-decoration: underline; }
+  .section { padding: 40px 48px; border-bottom: 1px solid var(--border); }
+  .section:last-child { border-bottom: none; }
+  h2 { font-size: 22px; font-weight: 700; color: var(--accent); margin-bottom: 20px; padding-top: 4px; }
+  h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; color: #1f2937; }
+  h4 { font-size: 14px; font-weight: 600; margin: 16px 0 8px; color: #374151; text-transform: uppercase; letter-spacing: .04em; }
+  p { margin-bottom: 12px; }
+  ul, ol { padding-left: 22px; margin-bottom: 14px; }
+  li { margin-bottom: 5px; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 13.5px; }
+  th { background: #f9fafb; text-align: left; padding: 8px 12px; border: 1px solid var(--border); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  td { padding: 8px 12px; border: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: #fafafa; }
+  code { background: var(--code-bg); border-radius: 4px; padding: 1px 5px; font-family: 'Courier New', monospace; font-size: 12.5px; color: #b91c1c; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 16px; overflow-x: auto; margin: 14px 0; }
+  pre code { background: none; padding: 0; color: #1f2937; font-size: 13px; }
+  .warn { background: var(--warn-bg); border-left: 4px solid var(--warn-border); padding: 14px 18px; border-radius: 4px; margin: 16px 0; font-size: 14px; }
+  .warn strong { color: #92400e; }
+  @media print {
+    .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    pre { white-space: pre-wrap; word-break: break-word; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>GSI Partner Opportunity Tracker</h1>
+  <p class="sub">Complete WordPress Build Specification — custom tables, custom REST API, custom theme, bespoke PHP &amp; JavaScript. No existing plugins required.</p>
+  <p class="meta">Generated August 2026 &nbsp;|&nbsp; Target host: SiteGround &nbsp;|&nbsp; Approach: fully custom WordPress must-use plugin + child theme</p>
+</div>
+
+<div class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#s1">Architecture Overview</a></li>
+    <li><a href="#s2">User Roles &amp; Authentication</a></li>
+    <li><a href="#s3">Database Schema (10 custom tables)</a></li>
+    <li><a href="#s4">Page &amp; Route Map</a></li>
+    <li><a href="#s5">Feature Specifications</a></li>
+    <li><a href="#s6">REST API Endpoint Reference</a></li>
+    <li><a href="#s7">AI &amp; External Integrations</a></li>
+    <li><a href="#s8">WordPress Implementation Guide</a></li>
+    <li><a href="#s9">SiteGround Hosting Configuration</a></li>
+  </ol>
+</div>
+
+<!-- ===== SECTION 1 ===== -->
+<div class="section" id="s1">
+<h2>1. Architecture Overview</h2>
+
+<p>The original application is a single-page React app (Vite + TypeScript) backed by a Node/Express REST API and PostgreSQL. The WordPress rebuild replicates all functionality as a fully custom single-site WordPress application with no dependency on existing plugins.</p>
+
+<h3>Layer Map</h3>
+<table>
+  <thead><tr><th>Layer</th><th>Original stack</th><th>WordPress equivalent</th></tr></thead>
+  <tbody>
+    <tr><td>Frontend</td><td>React 18, Vite, Wouter router, Tailwind, shadcn/ui</td><td>Single custom PHP template as SPA shell; React 18 or Vue 3 JS bundle built with Vite; Tailwind CSS; shadcn-style component library built from scratch</td></tr>
+    <tr><td>Backend API</td><td>Node.js / Express REST API</td><td>Custom WordPress REST namespace <strong>gsi/v1</strong> registered via register_rest_route() in a must-use plugin</td></tr>
+    <tr><td>Database</td><td>PostgreSQL, 16 tables</td><td>10 custom MySQL/InnoDB tables in the WordPress DB, created via dbDelta() on plugin activation</td></tr>
+    <tr><td>Auth</td><td>HMAC-signed cookie, Node crypto scrypt</td><td>WordPress wp_users + two custom roles; wp_set_auth_cookie() / wp_check_password(); role-gated REST permission callbacks</td></tr>
+    <tr><td>AI</td><td>Google Gemini via proxy</td><td>Server-side PHP (wp_remote_post / cURL) to Gemini REST API; API key stored as a WordPress option</td></tr>
+    <tr><td>Geocoding</td><td>Nominatim (OpenStreetMap) + AI pre-normalization</td><td>Same: PHP calls to Nominatim; AI normalizes informal location strings first; results cached in custom DB table</td></tr>
+    <tr><td>File import</td><td>CSV/Excel bulk contact import</td><td>Multipart REST upload; PHP fgetcsv() for CSV; vendored SimpleXLSX (single PHP class, no Composer) for Excel</td></tr>
+    <tr><td>Multi-tenancy</td><td>orgId column on all data tables</td><td>org_id column on all custom tables; user's org linked via WordPress user meta key gsi_org_id</td></tr>
+  </tbody>
+</table>
+
+<h3>Delivery Structure</h3>
+<ul>
+  <li><strong>Must-use plugin</strong> at <code>wp-content/mu-plugins/gsi-tracker/gsi-tracker.php</code> — registers all custom DB tables, REST routes, roles, and capabilities. Loads on every request before themes; cannot be deactivated from WP Admin.</li>
+  <li><strong>Child theme</strong> at <code>wp-content/themes/gsi-tracker/</code> — one root template (index.php) outputs the app shell HTML; all UI is rendered by the JS bundle.</li>
+  <li><strong>Frontend bundle</strong> — Vite builds JS + CSS assets into <code>themes/gsi-tracker/dist/</code>; WordPress enqueues them via functions.php with wp_enqueue_script / wp_enqueue_style.</li>
+</ul>
+
+<div class="warn"><strong>SPA routing:</strong> Every URL except /wp-admin, /wp-login.php, and /wp-json must return the same app-shell template. Implement with a catch-all RewriteRule in .htaccess (Apache on SiteGround). See Section 8.3 for the exact rules.</div>
+</div>
+
+<!-- ===== SECTION 2 ===== -->
+<div class="section" id="s2">
+<h2>2. User Roles &amp; Authentication</h2>
+
+<h3>Custom Roles</h3>
+<table>
+  <thead><tr><th>Role slug</th><th>Display name</th><th>Capabilities</th></tr></thead>
+  <tbody>
+    <tr><td><code>gsi_rep</code></td><td>Rep</td><td>Read/write own opportunities, all partners, all resources (partner and internal), own reminders, own profile. Read AI company research.</td></tr>
+    <tr><td><code>gsi_admin</code></td><td>Admin</td><td>All rep capabilities plus: manage users, org export/import, backup/restore/reset, MCP key administration.</td></tr>
+  </tbody>
+</table>
+
+<h3>Authentication Flow</h3>
+<ol>
+  <li>The app shell is served to all visitors. The JS router checks current-user state on load; unauthenticated visitors see only the login screen.</li>
+  <li><strong>Login:</strong> POST to <code>/wp-json/gsi/v1/auth/login</code> with <code>{email, password}</code>. PHP looks up the user by email via <code>get_user_by('email')</code>, verifies the password with <code>wp_check_password()</code>, calls <code>wp_set_auth_cookie()</code>, returns the user object.</li>
+  <li><strong>Session check:</strong> GET <code>/wp-json/gsi/v1/auth/me</code> — returns the current WP user if authenticated, else HTTP 401. The JS app calls this once on startup.</li>
+  <li><strong>Logout:</strong> POST <code>/wp-json/gsi/v1/auth/logout</code> — calls <code>wp_logout()</code>, returns <code>{success: true}</code>.</li>
+  <li>All other <code>gsi/v1</code> endpoints check authentication in their permission_callback using <code>is_user_logged_in()</code>. Admin-only endpoints also check <code>current_user_can('gsi_manage_users')</code>.</li>
+</ol>
+
+<h3>Organization (Tenant) Scoping</h3>
+<p>Each WordPress user has a custom user meta field <code>gsi_org_id</code> pointing to a row in the gsi_organizations table. Every REST endpoint filters DB queries by the current user's org_id. Admins only see their own org's data.</p>
+
+<pre><code>// Helper — use at the top of every REST handler:
+function gsi_current_org_id(): int {
+    return (int) get_user_meta(get_current_user_id(), 'gsi_org_id', true);
+}</code></pre>
+
+<h3>REST Nonce (CSRF protection)</h3>
+<p>Pass a WP REST nonce to the frontend via wp_localize_script() so all fetch calls include the <code>X-WP-Nonce</code> header:</p>
+<pre><code>wp_localize_script('gsi-app', 'gsiConfig', [
+    'apiBase'     => rest_url('gsi/v1'),
+    'nonce'       => wp_create_nonce('wp_rest'),
+    'currentUser' => is_user_logged_in() ? gsi_format_user(wp_get_current_user()) : null,
+]);</code></pre>
+</div>
+
+<!-- ===== SECTION 3 ===== -->
+<div class="section" id="s3">
+<h2>3. Database Schema</h2>
+<p>All tables use the WordPress DB prefix (default <code>wp_</code>). Create via <code>dbDelta()</code> in the plugin's <code>register_activation_hook</code> callback. Use InnoDB engine (default on SiteGround's MySQL 8) for real foreign-key enforcement.</p>
+<p>JSON columns store arrays/objects as JSON strings. In PHP: <code>json_encode()</code> to write, <code>json_decode($val, true)</code> to read.</p>
+
+<h3>gsi_organizations</h3>
+<table>
+  <thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>id</code></td><td>INT UNSIGNED AUTO_INCREMENT PRIMARY KEY</td><td></td></tr>
+    <tr><td><code>name</code></td><td>VARCHAR(255) NOT NULL</td><td>Organization display name</td></tr>
+    <tr><td><code>mcp_key</code></td><td>VARCHAR(255) NULL</td><td>API key for the read-only MCP endpoint (Claude AI integration)</td></tr>
+    <tr><td><code>created_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP</td><td></td></tr>
+  </tbody>
+</table>
+<p><em>Users are linked via WP user meta: <code>gsi_org_id</code> = gsi_organizations.id</em></p>
+
+<h3>gsi_partners</h3>
+<table>
+  <thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>id</code></td><td>INT UNSIGNED AUTO_INCREMENT PRIMARY KEY</td><td></td></tr>
+    <tr><td><code>org_id</code></td><td>INT UNSIGNED NOT NULL</td><td>FK → gsi_organizations.id</td></tr>
+    <tr><td><code>name</code></td><td>VARCHAR(255) NOT NULL</td><td></td></tr>
+    <tr><td><code>tier</code></td><td>VARCHAR(100) NULL</td><td>e.g. Gold, Silver, Platinum</td></tr>
+    <tr><td><code>region</code></td><td>VARCHAR(100) NULL</td><td></td></tr>
+    <tr><td><code>contact_name</code></td><td>VARCHAR(255) NULL</td><td>Legacy primary contact free-text name</td></tr>
+    <tr><td><code>contact_email</code></td><td>VARCHAR(255) NULL</td><td>Legacy primary contact free-text email</td></tr>
+    <tr><td><code>primary_contact_id</code></td><td>INT UNSIGNED NULL</td><td>FK → gsi_partner_resources.id (preferred linked contact record)</td></tr>
+    <tr><td><code>notes</code></td><td>LONGTEXT NOT NULL DEFAULT '[]'</td><td>JSON array of Note objects: <code>[{id, text, createdAt}]</code></td></tr>
+    <tr><td><code>revenue_target</code></td><td>DECIMAL(15,2) NULL</td><td>Annual revenue target for this partner</td></tr>
+    <tr><td><code>created_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP</td><td></td></tr>
+    <tr><td><code>updated_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>gsi_partner_resources</h3>
+<table>
+  <thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>id</code></td><td>INT UNSIGNED AUTO_INCREMENT PRIMARY KEY</td><td></td></tr>
+    <tr><td><code>partner_id</code></td><td>INT UNSIGNED NOT NULL</td><td>FK → gsi_partners.id ON DELETE CASCADE</td></tr>
+    <tr><td><code>name</code></td><td>VARCHAR(255) NOT NULL</td><td></td></tr>
+    <tr><td><code>function</code></td><td>VARCHAR(100) NULL</td><td>Job function / title</td></tr>
+    <tr><td><code>email</code></td><td>VARCHAR(255) NULL</td><td></td></tr>
+    <tr><td><code>phone</code></td><td>VARCHAR(100) NULL</td><td></td></tr>
+    <tr><td><code>location</code></td><td>VARCHAR(255) NULL</td><td>Free-text location string (geocoded lazily)</td></tr>
+    <tr><td><code>lat</code></td><td>DOUBLE NULL</td><td>Geocoded latitude</td></tr>
+    <tr><td><code>lon</code></td><td>DOUBLE NULL</td><td>Geocoded longitude</td></tr>
+    <tr><td><code>manager_id</code></td><td>INT UNSIGNED NULL</td><td>Self-referential FK → gsi_partner_resources.id (org hierarchy)</td></tr>
+    <tr><td><code>notes</code></td><td>LONGTEXT NOT NULL DEFAULT '[]'</td><td>JSON Note array</td></tr>
+    <tr><td><code>created_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP</td><td></td></tr>
+    <tr><td><code>updated_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>gsi_internal_resources</h3>
+<table>
+  <thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>id</code></td><td>INT UNSIGNED AUTO_INCREMENT PRIMARY KEY</td><td></td></tr>
+    <tr><td><code>org_id</code></td><td>INT UNSIGNED NOT NULL</td><td>FK → gsi_organizations.id</td></tr>
+    <tr><td><code>name</code></td><td>VARCHAR(255) NOT NULL</td><td></td></tr>
+    <tr><td><code>function</code></td><td>VARCHAR(100) NULL</td><td></td></tr>
+    <tr><td><code>email</code></td><td>VARCHAR(255) NULL</td><td></td></tr>
+    <tr><td><code>phone</code></td><td>VARCHAR(100) NULL</td><td></td></tr>
+    <tr><td><code>location</code></td><td>VARCHAR(255) NULL</td><td></td></tr>
+    <tr><td><code>lat</code></td><td>DOUBLE NULL</td><td></td></tr>
+    <tr><td><code>lon</code></td><td>DOUBLE NULL</td><td></td></tr>
+    <tr><td><code>manager_id</code></td><td>INT UNSIGNED NULL</td><td>Self-referential FK → gsi_internal_resources.id</td></tr>
+    <tr><td><code>notes</code></td><td>LONGTEXT NOT NULL DEFAULT '[]'</td><td>JSON Note array</td></tr>
+    <tr><td><code>created_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP</td><td></td></tr>
+    <tr><td><code>updated_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>gsi_opportunities</h3>
+<table>
+  <thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>id</code></td><td>INT UNSIGNED AUTO_INCREMENT PRIMARY KEY</td><td></td></tr>
+    <tr><td><code>org_id</code></td><td>INT UNSIGNED NOT NULL</td><td>FK → gsi_organizations.id</td></tr>
+    <tr><td><code>owner_id</code></td><td>BIGINT UNSIGNED NOT NULL</td><td>FK → wp_users.ID (the rep who owns this record)</td></tr>
+    <tr><td><code>partner_id</code></td><td>INT UNSIGNED NULL</td><td>FK → gsi_partners.id</td></tr>
+    <tr><td><code>name</code></td><td>VARCHAR(255) NOT NULL</td><td></td></tr>
+    <tr><td><code>type</code></td><td>VARCHAR(50) NOT NULL DEFAULT 'opportunity'</td><td>opportunity | initiative</td></tr>
+    <tr><td><code>stage</code></td><td>VARCHAR(100) NOT NULL DEFAULT 'Qualify'</td><td>Qualify | Discovery | Propose | Negotiate | Commit | ClosedWon | ClosedLost | Dormant</td></tr>
+    <tr><td><code>end_customer</code></td><td>VARCHAR(255) NULL</td><td>Customer company name (free text)</td></tr>
+    <tr><td><code>end_customer_domain</code></td><td>VARCHAR(255) NULL</td><td>Resolved domain used for AI company research</td></tr>
+    <tr><td><code>revenue</code></td><td>DECIMAL(15,2) NULL</td><td>Expected deal revenue value</td></tr>
+    <tr><td><code>close_date</code></td><td>DATE NULL</td><td>Projected close date</td></tr>
+    <tr><td><code>use_case</code></td><td>TEXT NULL</td><td>Solution use-case description</td></tr>
+    <tr><td><code>notes</code></td><td>LONGTEXT NOT NULL DEFAULT '[]'</td><td>JSON Note array: <code>[{id, text, createdAt}]</code></td></tr>
+    <tr><td><code>contacts</code></td><td>LONGTEXT NOT NULL DEFAULT '[]'</td><td>JSON array of embedded contacts. Each: <code>{id, name, email, phone, role, company, linkedResourceId?, linkedResourceType?}</code></td></tr>
+    <tr><td><code>meddpicc_score</code></td><td>DECIMAL(5,2) NULL</td><td>Server-computed weighted score 0–100. Recalculated on every MEDDPICC entry change.</td></tr>
+    <tr><td><code>closed_won_at</code></td><td>DATETIME NULL</td><td>Set server-side on the FIRST ClosedWon stage transition. NEVER cleared on reopen.</td></tr>
+    <tr><td><code>created_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP</td><td></td></tr>
+    <tr><td><code>updated_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>gsi_meddpicc_entries</h3>
+<table>
+  <thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>id</code></td><td>INT UNSIGNED AUTO_INCREMENT PRIMARY KEY</td><td></td></tr>
+    <tr><td><code>opportunity_id</code></td><td>INT UNSIGNED NOT NULL</td><td>FK → gsi_opportunities.id ON DELETE CASCADE</td></tr>
+    <tr><td><code>element</code></td><td>VARCHAR(50) NOT NULL</td><td>One of: Metrics | EconomicBuyer | DecisionCriteria | DecisionProcess | IdentifyPain | Champion | Competition | PaperProcess</td></tr>
+    <tr><td><code>content</code></td><td>TEXT NOT NULL</td><td>Rep's written qualification entry (free text)</td></tr>
+    <tr><td><code>customer_validated</code></td><td>TINYINT(1) NOT NULL DEFAULT 0</td><td>1 = customer has validated/confirmed this entry</td></tr>
+    <tr><td><code>relevance_score</code></td><td>TINYINT NULL</td><td>1–5 relevance rating set by the rep</td></tr>
+    <tr><td><code>created_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP</td><td></td></tr>
+    <tr><td><code>updated_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>gsi_meddpicc_section_meta</h3>
+<table>
+  <thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>id</code></td><td>INT UNSIGNED AUTO_INCREMENT PRIMARY KEY</td><td></td></tr>
+    <tr><td><code>opportunity_id</code></td><td>INT UNSIGNED NOT NULL</td><td>FK → gsi_opportunities.id ON DELETE CASCADE</td></tr>
+    <tr><td><code>element</code></td><td>VARCHAR(50) NOT NULL</td><td>MEDDPICC element name</td></tr>
+    <tr><td><code>notes</code></td><td>LONGTEXT NOT NULL DEFAULT '[]'</td><td>JSON Note array for this section</td></tr>
+    <tr><td><code>contact_ids</code></td><td>LONGTEXT NOT NULL DEFAULT '[]'</td><td>JSON array of linked contact identifiers</td></tr>
+    <tr><td><code>owner_id</code></td><td>VARCHAR(100) NULL</td><td>Section owner reference</td></tr>
+    <tr><td><code>created_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP</td><td></td></tr>
+    <tr><td><code>updated_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</td><td></td></tr>
+  </tbody>
+</table>
+<p><em>Unique constraint on (opportunity_id, element). Use INSERT ... ON DUPLICATE KEY UPDATE when saving.</em></p>
+
+<h3>gsi_company_research</h3>
+<table>
+  <thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>id</code></td><td>INT UNSIGNED AUTO_INCREMENT PRIMARY KEY</td><td></td></tr>
+    <tr><td><code>opportunity_id</code></td><td>INT UNSIGNED NOT NULL UNIQUE</td><td>FK → gsi_opportunities.id ON DELETE CASCADE. One research record per opportunity.</td></tr>
+    <tr><td><code>company_name</code></td><td>VARCHAR(255) NOT NULL</td><td></td></tr>
+    <tr><td><code>company_domain</code></td><td>VARCHAR(255) NULL</td><td></td></tr>
+    <tr><td><code>industry</code></td><td>VARCHAR(255) NULL</td><td>AI-extracted industry</td></tr>
+    <tr><td><code>location</code></td><td>VARCHAR(255) NULL</td><td>AI-extracted HQ location</td></tr>
+    <tr><td><code>overview</code></td><td>LONGTEXT NULL</td><td>AI-generated 2–3 paragraph company overview narrative</td></tr>
+    <tr><td><code>sections</code></td><td>LONGTEXT NOT NULL DEFAULT '[]'</td><td>JSON: <code>[{element, summary, sources:[{title,url}]}]</code> — one entry per MEDDPICC element</td></tr>
+    <tr><td><code>status</code></td><td>VARCHAR(50) NOT NULL DEFAULT 'ready'</td><td>ready | generating | error</td></tr>
+    <tr><td><code>error</code></td><td>TEXT NULL</td><td>Error message when status=error</td></tr>
+    <tr><td><code>generated_at</code></td><td>DATETIME NULL</td><td>Timestamp of last successful AI generation</td></tr>
+    <tr><td><code>created_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP</td><td></td></tr>
+    <tr><td><code>updated_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>gsi_reminders</h3>
+<table>
+  <thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>id</code></td><td>INT UNSIGNED AUTO_INCREMENT PRIMARY KEY</td><td></td></tr>
+    <tr><td><code>user_id</code></td><td>BIGINT UNSIGNED NOT NULL</td><td>FK → wp_users.ID ON DELETE CASCADE. Reminders are personal to the user.</td></tr>
+    <tr><td><code>name</code></td><td>VARCHAR(255) NOT NULL</td><td>Reminder title / label</td></tr>
+    <tr><td><code>due_at</code></td><td>DATETIME NOT NULL</td><td>When the reminder is due</td></tr>
+    <tr><td><code>entity_type</code></td><td>VARCHAR(100) NULL</td><td>Polymorphic type: opportunity | partner | partner_resource | internal_resource</td></tr>
+    <tr><td><code>entity_id</code></td><td>VARCHAR(100) NULL</td><td>ID of the linked entity</td></tr>
+    <tr><td><code>entity_label</code></td><td>VARCHAR(255) NULL</td><td>Human-readable display name of the linked entity</td></tr>
+    <tr><td><code>linked_company</code></td><td>VARCHAR(255) NULL</td><td>Optional associated company name</td></tr>
+    <tr><td><code>linked_contact</code></td><td>VARCHAR(255) NULL</td><td>Optional associated contact name</td></tr>
+    <tr><td><code>notes</code></td><td>TEXT NULL</td><td>Free-text notes on the reminder</td></tr>
+    <tr><td><code>completed_at</code></td><td>DATETIME NULL</td><td>NULL = pending; set to NOW() when the rep marks it complete</td></tr>
+    <tr><td><code>created_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP</td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>gsi_geocode_cache</h3>
+<table>
+  <thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>id</code></td><td>INT UNSIGNED AUTO_INCREMENT PRIMARY KEY</td><td></td></tr>
+    <tr><td><code>query</code></td><td>VARCHAR(500) NOT NULL UNIQUE</td><td>Normalized location string used as cache key</td></tr>
+    <tr><td><code>canonical_name</code></td><td>VARCHAR(500) NULL</td><td>Nominatim display_name result</td></tr>
+    <tr><td><code>lat</code></td><td>DOUBLE NULL</td><td></td></tr>
+    <tr><td><code>lon</code></td><td>DOUBLE NULL</td><td></td></tr>
+    <tr><td><code>resolved</code></td><td>TINYINT(1) NOT NULL DEFAULT 0</td><td>1 = geocoded successfully; 0 = not found (also cached to prevent repeat API calls)</td></tr>
+    <tr><td><code>source</code></td><td>VARCHAR(100) NULL</td><td>e.g. "nominatim"</td></tr>
+    <tr><td><code>created_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP</td><td></td></tr>
+    <tr><td><code>updated_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>gsi_profiles</h3>
+<table>
+  <thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>id</code></td><td>INT UNSIGNED AUTO_INCREMENT PRIMARY KEY</td><td></td></tr>
+    <tr><td><code>user_id</code></td><td>BIGINT UNSIGNED NOT NULL UNIQUE</td><td>FK → wp_users.ID ON DELETE CASCADE</td></tr>
+    <tr><td><code>revenue_metric</code></td><td>VARCHAR(50) NOT NULL DEFAULT 'ACV'</td><td>ACV | TCV | ARR | Bookings</td></tr>
+    <tr><td><code>fiscal_year_start</code></td><td>TINYINT NOT NULL DEFAULT 1</td><td>Month number 1–12</td></tr>
+    <tr><td><code>fiscal_year_end</code></td><td>TINYINT NOT NULL DEFAULT 12</td><td>Month number 1–12</td></tr>
+    <tr><td><code>quota</code></td><td>DECIMAL(15,2) NULL</td><td>User's annual revenue quota</td></tr>
+    <tr><td><code>q1_goal_pct</code></td><td>DECIMAL(5,2) NULL DEFAULT 25</td><td>Percentage of annual quota to hit in Q1</td></tr>
+    <tr><td><code>q2_goal_pct</code></td><td>DECIMAL(5,2) NULL DEFAULT 25</td><td></td></tr>
+    <tr><td><code>q3_goal_pct</code></td><td>DECIMAL(5,2) NULL DEFAULT 25</td><td></td></tr>
+    <tr><td><code>q4_goal_pct</code></td><td>DECIMAL(5,2) NULL DEFAULT 25</td><td></td></tr>
+    <tr><td><code>created_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP</td><td></td></tr>
+    <tr><td><code>updated_at</code></td><td>DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</td><td></td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ===== SECTION 4 ===== -->
+<div class="section" id="s4">
+<h2>4. Page &amp; Route Map</h2>
+<p>All routes are handled client-side by the JS router. WordPress serves the same index.php app shell for every URL matching the SPA catch-all rewrite rule.</p>
+
+<table>
+  <thead><tr><th>Route</th><th>Page</th><th>Access</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>/login</code></td><td>Login</td><td>Anyone</td>
+      <td>Email + password form. On success the auth cookie is set and the user is redirected to /dashboard. Authenticated users are immediately redirected away.</td>
+    </tr>
+    <tr>
+      <td><code>/dashboard</code></td><td>Dashboard</td><td>All authenticated</td>
+      <td>Primary workspace. Sortable/filterable pipeline table of all opportunities and initiatives. Summary KPI cards (total pipeline value, weighted pipeline, count by stage, average MEDDPICC health). Two alternate views: grouped by stage, grouped by partner. Inline create/edit/delete opportunities from the table. Global actions drawer (quick-create). Reminder bell badge in header.</td>
+    </tr>
+    <tr>
+      <td><code>/opportunities/:id</code></td><td>Opportunity Detail</td><td>All authenticated</td>
+      <td>Full editable detail for one opportunity. Editable fields: name, type, stage, partner, owner, end-customer (with domain picker), revenue, close date, use case. Tabbed sections: Notes, Contacts (embedded list + link to directory), MEDDPICC Workspace (8 elements), Company Research (AI-generated panel), Resources (partner contacts + internal colleagues), Reminders.</td>
+    </tr>
+    <tr>
+      <td><code>/partners</code></td><td>Partner Directory</td><td>All authenticated</td>
+      <td>List of all partners in the org. Click to open a detail panel: name, tier, region, revenue target, primary contact selector, notes, and the partner's contacts table. Create / edit / delete partners and their contacts. AI macro research for the partner.</td>
+    </tr>
+    <tr>
+      <td><code>/outcomes</code></td><td>Outcomes &amp; Analytics</td><td>All authenticated</td>
+      <td>Reporting view. Closed-won revenue vs quota for the current fiscal year (respecting user's fiscal year settings). Charts: pipeline by stage (bar/funnel), pipeline by partner (bar), MEDDPICC health score distribution, win/loss count ratio. Filter by date range and partner.</td>
+    </tr>
+    <tr>
+      <td><code>/nearby</code></td><td>Nearby Contact Search</td><td>All authenticated</td>
+      <td>Enter a destination (city, address, region, informal string like "Cinci") and a radius (miles or km). Returns all partner and internal contacts within that radius, sorted by distance. A separate list shows contacts with no geocoded location ("unresolved").</td>
+    </tr>
+    <tr>
+      <td><code>/admin/users</code></td><td>User Administration</td><td>gsi_admin only</td>
+      <td>List, create, edit, and delete application users. Fields: name, email, password (on create), role (rep/admin), region, quota. Also shows the org's MCP API key and allows key regeneration.</td>
+    </tr>
+    <tr>
+      <td><code>/profile</code></td><td>My Profile</td><td>All authenticated</td>
+      <td>Edit own name, revenue metric preference (ACV/TCV/ARR/Bookings), fiscal year start and end months, annual quota, and per-quarter goal percentages (Q1–Q4).</td>
+    </tr>
+    <tr>
+      <td><code>*</code></td><td>404</td><td>All</td>
+      <td>Not-found screen with a link back to /dashboard.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Navigation Sidebar (persistent when authenticated)</h3>
+<ul>
+  <li>Dashboard</li>
+  <li>Partners</li>
+  <li>Outcomes</li>
+  <li>Nearby</li>
+  <li>Users <em>(admin only — hidden for reps)</em></li>
+  <li>Profile + Logout <em>(anchored at bottom)</em></li>
+</ul>
+<p>Sidebar is collapsible to icon-only mode. Shows current user name and role badge at the bottom.</p>
+
+<h3>Global Actions Panel (Drawer)</h3>
+<p>A slide-out drawer, triggered by a persistent button in the layout, allows quick creation of: a new Opportunity, a new Initiative, or a new Reminder — without navigating away from the current page.</p>
+</div>
+
+<!-- ===== SECTION 5 ===== -->
+<div class="section" id="s5">
+<h2>5. Feature Specifications</h2>
+
+<h3>5.1 Opportunity Lifecycle</h3>
+<p>Stages: <strong>Qualify → Discovery → Propose → Negotiate → Commit → ClosedWon / ClosedLost / Dormant</strong></p>
+<ul>
+  <li>Reps can jump to any stage at any time; the order is not enforced.</li>
+  <li>When stage first transitions to <strong>ClosedWon</strong>, the server sets <code>closed_won_at = NOW()</code>. This field is <strong>never cleared</strong>, even if the stage later changes back.</li>
+  <li>Type is <code>opportunity</code> (default) or <code>initiative</code>. Both share the same table and detail page; the UI labels and icon differ.</li>
+  <li>Pipeline table supports: sort by name / revenue / close date / MEDDPICC score / stage; filter by partner, owner, stage, type; group by stage or by partner.</li>
+  <li>Inline edit in the table: stage (dropdown), partner, close date, revenue (single-cell click-to-edit pattern).</li>
+</ul>
+
+<h3>5.2 MEDDPICC Qualification Framework</h3>
+<p>An 8-element B2B sales qualification methodology:</p>
+<ol>
+  <li><strong>Metrics</strong> — Quantifiable business value the customer gains</li>
+  <li><strong>Economic Buyer</strong> — Person who controls budget approval</li>
+  <li><strong>Decision Criteria</strong> — Formal and informal criteria to evaluate solutions</li>
+  <li><strong>Decision Process</strong> — How and by whom the decision is made</li>
+  <li><strong>Identify Pain</strong> — The business problem or cost of inaction</li>
+  <li><strong>Champion</strong> — Internal customer advocate who supports the deal</li>
+  <li><strong>Competition</strong> — Competing solutions being evaluated</li>
+  <li><strong>Paper Process</strong> — Legal, procurement, and signature steps to close</li>
+</ol>
+
+<h4>Entries (per element)</h4>
+<p>Each element can have multiple rep-written entries. Each entry has: <strong>content</strong> (free text), <strong>customer_validated</strong> (boolean checkbox), <strong>relevance_score</strong> (integer 1–5 slider).</p>
+
+<h4>Section Meta (per element)</h4>
+<p>Each element section also carries: section-level notes (Note array), linked contact IDs, and an owner field.</p>
+
+<h4>Weighted Score Algorithm — implement server-side in PHP</h4>
+<pre><code>Element weights (must sum to 100):
+  Metrics:           15
+  EconomicBuyer:     15
+  DecisionCriteria:  10
+  DecisionProcess:   10
+  IdentifyPain:      15
+  Champion:          15
+  Competition:       10
+  PaperProcess:      10
+
+Per-element score:
+  If element has no entries with a relevance_score → 0
+  Otherwise → (AVG(relevance_score) across entries) / 5 * element_weight
+
+Total meddpicc_score = SUM of all per-element scores   (range: 0 – 100)
+
+Trigger: recalculate and UPDATE gsi_opportunities.meddpicc_score after
+every MEDDPICC entry CREATE, UPDATE, or DELETE.</code></pre>
+
+<div class="warn"><strong>Critical rule:</strong> AI company research is strictly presentation-only and must never influence or modify the MEDDPICC score. Only data entered by reps (content + relevance_score) contributes to the score.</div>
+
+<h3>5.3 Contacts &amp; Directories</h3>
+<p>Two directories:</p>
+<ul>
+  <li><strong>Partner contacts</strong> (gsi_partner_resources) — people at partner organizations</li>
+  <li><strong>Internal colleagues</strong> (gsi_internal_resources) — internal team members</li>
+</ul>
+<p>Both share the same field structure. Both support a self-referential manager_id for org hierarchy.</p>
+
+<p>Opportunities also carry an <strong>embedded contacts</strong> JSON array. These lightweight objects (name, email, phone, role, company) can optionally be <em>linked</em> to a directory record via <code>linkedResourceId</code> + <code>linkedResourceType</code>.</p>
+
+<p><strong>Cross-directory typeahead:</strong> A search input that queries both directories simultaneously by name/email. Results are labeled by source (partner name or "Internal"). Used to link an embedded contact to an existing directory record.</p>
+
+<h4>CSV / Excel Bulk Import (two-step flow)</h4>
+<ol>
+  <li>Upload file → server parses and returns: detected column headers + first 5 preview rows.</li>
+  <li>User maps columns to schema fields (name, email, phone, function, location, manager).</li>
+  <li>User confirms → server bulk-inserts. Response includes: created count, skipped count, and a <code>skipped</code> array with a reason per rejected row.</li>
+  <li>Rows with broken foreign key links (e.g. invalid partner_id) MUST appear in the skipped list — never silently dropped.</li>
+</ol>
+
+<h3>5.4 Reminders</h3>
+<ul>
+  <li>Personal to the logged-in user — other users cannot see or edit them.</li>
+  <li>Fields: name (title), due date/time, optional linked entity, optional linked company name, optional linked contact name, notes.</li>
+  <li>States: <strong>pending</strong> (completed_at IS NULL) and <strong>completed</strong> (completed_at is set).</li>
+  <li>Reminder bell in the global header shows a count badge for upcoming pending reminders due within 7 days.</li>
+  <li>Reminders can be created/edited/completed/deleted from: the dashboard bell, opportunity detail, contact/resource detail panels, and MEDDPICC section sidebars.</li>
+  <li>Editing a saved reminder supports changing the linked company and linked contact in addition to all other fields.</li>
+</ul>
+
+<h3>5.5 Company Intelligence (AI Research)</h3>
+<ol>
+  <li>When an end-customer domain is set on an opportunity, a "Generate Research" button appears on the opportunity detail page.</li>
+  <li>Server calls Gemini API: produces a company overview narrative and per-MEDDPICC-element summaries with cited public source URLs.</li>
+  <li>Results are stored in gsi_company_research. Status field cycles: <code>generating</code> → <code>ready</code> (or <code>error</code>).</li>
+  <li>The UI shows a read-only panel: overview text, and an accordion/tab per MEDDPICC element with the summary and clickable source links.</li>
+  <li>Reps can refresh research at any time; the previous record is overwritten.</li>
+  <li>Changing the end-customer on an opportunity <strong>deletes the stored research</strong> (it is stale for the new company).</li>
+  <li><strong>Macro search:</strong> A global AI query box for open-ended research questions about any partner, opportunity, or company. Returns a narrative response. Results are <em>not</em> stored in the database.</li>
+</ol>
+
+<h3>5.6 Nearby Contact Search</h3>
+<ol>
+  <li>User enters a destination (e.g. "Cincinnati, OH" or informally "Cinci") and a radius with unit (mi or km).</li>
+  <li>Server sends the raw string to Gemini to normalize → "Cincinnati, Ohio, USA".</li>
+  <li>Normalized string is checked against gsi_geocode_cache. Cache hit → use stored lat/lon.</li>
+  <li>Cache miss → call Nominatim API. Cache the result (including not-found) before returning.</li>
+  <li>Compute Haversine distance from destination to every partner and internal resource in the org that has lat/lon set. Return those within radius, sorted by distance ascending.</li>
+  <li>Contacts with no geocoded lat/lon are returned in a separate "unresolved locations" list.</li>
+</ol>
+<p><strong>Nominatim policy:</strong> Always include <code>User-Agent: YourApp/1.0 (admin@yourdomain.com)</code> header. Max 1 request per second — add <code>usleep(1000000)</code> between batch geocoding calls.</p>
+
+<h3>5.7 Dashboard Analytics</h3>
+<h4>KPI Cards (Dashboard)</h4>
+<ul>
+  <li>Total pipeline value — sum of revenue for all non-closed opportunities</li>
+  <li>Weighted pipeline — sum of (revenue × stage probability). Weights: Qualify 10%, Discovery 20%, Propose 40%, Negotiate 60%, Commit 80%, ClosedWon 100%</li>
+  <li>Opportunity count by stage</li>
+  <li>Average MEDDPICC health score across all open opportunities</li>
+</ul>
+<h4>Outcomes Page Charts</h4>
+<ul>
+  <li>Closed-won revenue vs annual quota for the current fiscal year (using user's fiscal_year_start/end settings)</li>
+  <li>Pipeline value by partner (bar chart)</li>
+  <li>Pipeline value by stage (bar or funnel chart)</li>
+  <li>Win rate: ClosedWon count ÷ (ClosedWon + ClosedLost) count</li>
+  <li>Average MEDDPICC score at time of deal close</li>
+</ul>
+
+<h3>5.8 Administration</h3>
+<ul>
+  <li><strong>User management:</strong> Admin lists all users in the org. Create: calls wp_insert_user(), creates a gsi_profiles row, writes gsi_org_id user meta. Edit: name, email, role, quota, region. Reset password. Delete (cannot delete own account).</li>
+  <li><strong>Org export/import:</strong> Admin downloads a JSON file of all org data (opportunities, partners, resources, MEDDPICC, reminders, research). Import replaces the org's data from a previously exported JSON file.</li>
+  <li><strong>Full backup/restore/clear:</strong> Admin-only. Export or restore all data across all orgs. Clear wipes everything (must require confirmation).</li>
+  <li><strong>MCP key:</strong> Admin views the org's MCP API key (value masked in UI). Regenerate button creates a new random key and saves it in gsi_organizations.mcp_key.</li>
+</ul>
+
+<h3>5.9 MCP Read-Only Endpoint (Claude AI Integration)</h3>
+<p>The endpoint <code>/wp-json/gsi/v1/mcp</code> provides read-only access to the org's tracker data for Claude AI. Authenticated by the org's <code>mcp_key</code> value sent as a Bearer token in the Authorization header (not a WP cookie). Returns structured data: open opportunities, partners, pipeline summary, and contact directory for the caller's org.</p>
+</div>
+
+<!-- ===== SECTION 6 ===== -->
+<div class="section" id="s6">
+<h2>6. REST API Endpoint Reference</h2>
+<p>Base path: <code>/wp-json/gsi/v1/</code>. All endpoints registered via <code>register_rest_route()</code> in the must-use plugin's <code>rest_api_init</code> hook. All endpoints except <code>auth/login</code> and <code>/mcp</code> require a valid WP auth cookie.</p>
+
+<h3>Authentication</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Auth</th><th>Body / Params</th><th>Response</th></tr></thead>
+  <tbody>
+    <tr><td>POST</td><td>/auth/login</td><td>None</td><td>{email, password}</td><td>User object + sets auth cookie</td></tr>
+    <tr><td>GET</td><td>/auth/me</td><td>WP cookie</td><td>—</td><td>{id, name, email, role, orgId, profile} or 401</td></tr>
+    <tr><td>POST</td><td>/auth/logout</td><td>WP cookie</td><td>—</td><td>{success: true}</td></tr>
+  </tbody>
+</table>
+
+<h3>Opportunities</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td>GET</td><td>/opportunities</td><td>List all org opportunities. Query params: type, stage, partner_id, owner_id.</td></tr>
+    <tr><td>POST</td><td>/opportunities</td><td>Create. Body: name, type, stage, partner_id, owner_id, end_customer, revenue, close_date, use_case.</td></tr>
+    <tr><td>GET</td><td>/opportunities/:id</td><td>Single opportunity with notes and contacts array.</td></tr>
+    <tr><td>PATCH</td><td>/opportunities/:id</td><td>Partial update. Server sets closed_won_at on first ClosedWon transition. Clears company_research if end_customer changes.</td></tr>
+    <tr><td>DELETE</td><td>/opportunities/:id</td><td>Delete and cascade all related records.</td></tr>
+    <tr><td>POST</td><td>/opportunities/:id/contacts</td><td>Add embedded contact. Body: name, email, phone, role, company.</td></tr>
+    <tr><td>PATCH</td><td>/opportunities/:id/contacts/:cid</td><td>Edit embedded contact. Supports setting/clearing linkedResourceId + linkedResourceType.</td></tr>
+    <tr><td>DELETE</td><td>/opportunities/:id/contacts/:cid</td><td>Remove embedded contact (updates the JSON array in the opportunity row).</td></tr>
+  </tbody>
+</table>
+
+<h3>MEDDPICC</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td>GET</td><td>/opportunities/:id/meddpicc</td><td>All entries + section meta for the opportunity, grouped by element.</td></tr>
+    <tr><td>POST</td><td>/opportunities/:id/meddpicc</td><td>Create entry. Body: element, content, customer_validated, relevance_score. Triggers score recalculation.</td></tr>
+    <tr><td>PATCH</td><td>/opportunities/:id/meddpicc/:eid</td><td>Update entry. Triggers score recalculation.</td></tr>
+    <tr><td>DELETE</td><td>/opportunities/:id/meddpicc/:eid</td><td>Delete entry. Triggers score recalculation.</td></tr>
+    <tr><td>GET</td><td>/opportunities/:id/meddpicc/meta/:element</td><td>Get section meta for one element.</td></tr>
+    <tr><td>PATCH</td><td>/opportunities/:id/meddpicc/meta/:element</td><td>Upsert section meta (notes, contact_ids, owner_id).</td></tr>
+  </tbody>
+</table>
+
+<h3>Partners</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td>GET</td><td>/partners</td><td>List all org partners.</td></tr>
+    <tr><td>POST</td><td>/partners</td><td>Create partner.</td></tr>
+    <tr><td>GET</td><td>/partners/:id</td><td>Partner with all resources.</td></tr>
+    <tr><td>PATCH</td><td>/partners/:id</td><td>Update partner fields.</td></tr>
+    <tr><td>DELETE</td><td>/partners/:id</td><td>Delete partner and cascade contacts.</td></tr>
+    <tr><td>GET</td><td>/partners/:id/resources</td><td>List partner contacts.</td></tr>
+    <tr><td>POST</td><td>/partners/:id/resources</td><td>Create partner contact.</td></tr>
+    <tr><td>PATCH</td><td>/partners/:id/resources/:rid</td><td>Update partner contact.</td></tr>
+    <tr><td>DELETE</td><td>/partners/:id/resources/:rid</td><td>Delete partner contact.</td></tr>
+    <tr><td>POST</td><td>/partners/:id/resources/import</td><td>Bulk import contacts from CSV/XLSX file upload.</td></tr>
+  </tbody>
+</table>
+
+<h3>Internal Resources</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td>GET</td><td>/internal-resources</td><td>List all internal contacts for the org.</td></tr>
+    <tr><td>POST</td><td>/internal-resources</td><td>Create internal contact.</td></tr>
+    <tr><td>PATCH</td><td>/internal-resources/:id</td><td>Update.</td></tr>
+    <tr><td>DELETE</td><td>/internal-resources/:id</td><td>Delete.</td></tr>
+    <tr><td>POST</td><td>/internal-resources/import</td><td>Bulk import from CSV/XLSX.</td></tr>
+  </tbody>
+</table>
+
+<h3>People Typeahead</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td>GET</td><td>/people/search?q=</td><td>Cross-directory search (min 2 chars). Returns matching partner_resources and internal_resources in the org, labeled by source. Used for contact linking typeahead.</td></tr>
+  </tbody>
+</table>
+
+<h3>Company Intelligence</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td>GET</td><td>/company/:opportunityId</td><td>Get stored research for an opportunity.</td></tr>
+    <tr><td>POST</td><td>/company/:opportunityId/generate</td><td>Trigger Gemini AI generation. Overwrites previous research. Returns updated record when complete.</td></tr>
+    <tr><td>POST</td><td>/company/macro-search</td><td>Body: {query}. Returns AI narrative for open-ended research question. Not stored.</td></tr>
+  </tbody>
+</table>
+
+<h3>Reminders</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td>GET</td><td>/reminders</td><td>List current user's reminders. Query: completed (bool), entity_type, entity_id.</td></tr>
+    <tr><td>POST</td><td>/reminders</td><td>Create reminder.</td></tr>
+    <tr><td>PATCH</td><td>/reminders/:id</td><td>Update any reminder field including linked_company and linked_contact.</td></tr>
+    <tr><td>DELETE</td><td>/reminders/:id</td><td>Delete reminder.</td></tr>
+    <tr><td>POST</td><td>/reminders/:id/complete</td><td>Mark complete (sets completed_at = NOW()).</td></tr>
+  </tbody>
+</table>
+
+<h3>Dashboard, Profile, Nearby</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td>GET</td><td>/dashboard</td><td>Aggregated pipeline data: KPI totals, opps by stage, by partner, MEDDPICC health distribution.</td></tr>
+    <tr><td>GET</td><td>/profile</td><td>Current user's profile settings.</td></tr>
+    <tr><td>PATCH</td><td>/profile</td><td>Update profile settings (revenue_metric, fiscal year, quota, quarterly goal pcts).</td></tr>
+    <tr><td>POST</td><td>/nearby</td><td>Body: {destination, radius, unit}. Returns contacts within radius + unresolved list.</td></tr>
+  </tbody>
+</table>
+
+<h3>Admin &amp; Backup</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Auth</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td>GET</td><td>/admin/users</td><td>gsi_admin</td><td>List users in org.</td></tr>
+    <tr><td>POST</td><td>/admin/users</td><td>gsi_admin</td><td>Create user + profile + org linkage.</td></tr>
+    <tr><td>PATCH</td><td>/admin/users/:id</td><td>gsi_admin</td><td>Update user.</td></tr>
+    <tr><td>DELETE</td><td>/admin/users/:id</td><td>gsi_admin</td><td>Delete user (cannot delete self).</td></tr>
+    <tr><td>GET</td><td>/admin/org-export</td><td>gsi_admin</td><td>Export full org data as JSON download.</td></tr>
+    <tr><td>POST</td><td>/admin/org-import</td><td>gsi_admin</td><td>Import org data from JSON. Replaces existing org data.</td></tr>
+    <tr><td>GET</td><td>/admin/mcp-info</td><td>gsi_admin</td><td>Current MCP key status.</td></tr>
+    <tr><td>POST</td><td>/admin/mcp-key/generate</td><td>gsi_admin</td><td>Regenerate MCP API key.</td></tr>
+    <tr><td>GET</td><td>/backup/export</td><td>gsi_admin</td><td>Full DB export (all orgs).</td></tr>
+    <tr><td>POST</td><td>/backup/import</td><td>gsi_admin</td><td>Full DB restore.</td></tr>
+    <tr><td>POST</td><td>/backup/clear</td><td>gsi_admin</td><td>Wipe all data (requires confirmation param).</td></tr>
+  </tbody>
+</table>
+
+<h3>MCP Read-Only Access</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Auth</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td>GET / POST</td><td>/mcp</td><td>Bearer mcp_key (NOT WP cookie)</td><td>Read-only structured data for Claude AI. Returns opportunities, partners, and summary data for the org identified by the MCP key.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ===== SECTION 7 ===== -->
+<div class="section" id="s7">
+<h2>7. AI &amp; External Integrations</h2>
+
+<h3>7.1 Google Gemini AI</h3>
+<p>Used for: company research generation, macro search, and pre-normalizing location strings before geocoding.</p>
+<ul>
+  <li>Store the API key as a WordPress option (not in code): <code>update_option('gsi_gemini_api_key', $key)</code>. Read: <code>get_option('gsi_gemini_api_key')</code>.</li>
+  <li>Endpoint: <code>https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=API_KEY</code></li>
+  <li>All Gemini calls are server-side PHP (wp_remote_post or cURL). <strong>Never expose the API key to the browser.</strong></li>
+  <li>Strip markdown code fences (<code>```json ... ```</code>) from responses before json_decode().</li>
+  <li>Always provide a graceful fallback if a Gemini call fails: log the error, return partial/empty data, do not surface HTTP 500 to the client.</li>
+</ul>
+
+<h4>Company Research Prompt</h4>
+<pre><code>System: You are a B2B sales intelligence assistant.
+
+User: Given the company domain "{domain}", generate:
+1. A 2–3 paragraph company overview (narrative text)
+2. For each MEDDPICC element (Metrics, EconomicBuyer, DecisionCriteria,
+   DecisionProcess, IdentifyPain, Champion, Competition, PaperProcess):
+   - A 1–2 sentence strategic summary relevant to selling to this company
+   - Up to 3 cited public source URLs
+
+Return ONLY valid JSON with this exact structure, no markdown fences:
+{
+  "overview": "string",
+  "sections": [
+    {
+      "element": "Metrics",
+      "summary": "string",
+      "sources": [{"title": "string", "url": "string"}]
+    }
+  ]
+}</code></pre>
+
+<h4>Location Normalization Prompt</h4>
+<pre><code>Normalize this informal location string to a full city/region name
+suitable for geocoding: "{raw_input}"
+Return only the normalized string, nothing else.
+Example: "Cinci" -> "Cincinnati, Ohio, USA"</code></pre>
+
+<h3>7.2 Nominatim Geocoding (OpenStreetMap)</h3>
+<ul>
+  <li>URL: <code>https://nominatim.openstreetmap.org/search?q={query}&amp;format=json&amp;limit=1</code></li>
+  <li><strong>Required header:</strong> <code>User-Agent: GSITracker/1.0 (admin@yourdomain.com)</code> — Nominatim's usage policy requires this.</li>
+  <li>Cache all results (including not-found) in gsi_geocode_cache keyed by the <em>normalized</em> query string, before returning to the caller.</li>
+  <li>Rate limit: maximum 1 request per second. Add <code>usleep(1000000)</code> between batch geocoding calls.</li>
+</ul>
+
+<h3>7.3 CSV / Excel Import</h3>
+<ul>
+  <li>Accept <code>multipart/form-data</code> at the import REST endpoints.</li>
+  <li>CSV: PHP native <code>fgetcsv()</code>.</li>
+  <li>Excel (.xlsx): vendor <a href="https://github.com/shuchkin/simplexlsx" style="color:var(--accent)">SimpleXLSX</a> — a single self-contained PHP class file. Place it at <code>mu-plugins/gsi-tracker/vendor/simplexlsx/SimpleXLSX.php</code>. No Composer required.</li>
+</ul>
+</div>
+
+<!-- ===== SECTION 8 ===== -->
+<div class="section" id="s8">
+<h2>8. WordPress Implementation Guide</h2>
+
+<h3>8.1 Plugin File Structure</h3>
+<pre><code>wp-content/
+  mu-plugins/
+    gsi-tracker/
+      gsi-tracker.php              Plugin bootstrap; activation hook; autoloader
+      includes/
+        class-db.php               dbDelta() table definitions
+        class-auth.php             /auth/* REST handlers
+        class-opportunities.php    /opportunities/* handlers
+        class-meddpicc.php         /meddpicc/* handlers + score calculation
+        class-partners.php         /partners/* handlers
+        class-resources.php        /internal-resources/* handlers
+        class-reminders.php        /reminders/* handlers
+        class-company-ai.php       Gemini integration + research storage
+        class-nearby.php           Geocoding + Haversine distance search
+        class-dashboard.php        /dashboard aggregation queries
+        class-admin.php            /admin/* + /backup/* handlers
+        class-mcp.php              /mcp endpoint (Bearer-token auth)
+        helpers.php                MEDDPICC score calc, shared utilities
+      vendor/
+        simplexlsx/SimpleXLSX.php  Excel reader
+
+  themes/
+    gsi-tracker/
+      style.css                    WordPress theme header comment
+      index.php                    App shell template (single template for all routes)
+      functions.php                Script/style enqueue; wp_localize_script
+      dist/
+        app.js                     Vite-built frontend JS bundle
+        app.css                    Tailwind + component styles</code></pre>
+
+<h3>8.2 App Shell Template (themes/gsi-tracker/index.php)</h3>
+<pre><code>&lt;?php
+/**
+ * The only template for the GSI Tracker SPA.
+ * WordPress serves this for every URL via the .htaccess catch-all.
+ */
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html &lt;?php language_attributes(); ?&gt;&gt;
+&lt;head&gt;
+  &lt;meta charset="&lt;?php bloginfo('charset'); ?&gt;"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+  &lt;title&gt;GSI Partner Opportunity Tracker&lt;/title&gt;
+  &lt;?php wp_head(); ?&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id="app"&gt;&lt;!-- JS mounts here --&gt;&lt;/div&gt;
+  &lt;?php wp_footer(); // enqueues app.js + app.css ?&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<h3>8.3 SPA Catch-All Rewrite (.htaccess on SiteGround)</h3>
+<pre><code># Add BELOW the standard WordPress rewrite block:
+
+RewriteEngine On
+RewriteBase /
+
+# Pass through real files and directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Pass through WordPress core paths
+RewriteCond %{REQUEST_URI} !^/wp-admin
+RewriteCond %{REQUEST_URI} !^/wp-login\.php
+RewriteCond %{REQUEST_URI} !^/wp-json
+RewriteCond %{REQUEST_URI} !^/wp-cron\.php
+
+# All other URLs → app shell
+RewriteRule ^ /index.php [L]</code></pre>
+
+<h3>8.4 Roles Registration (plugin activation hook)</h3>
+<pre><code>register_activation_hook(__FILE__, function() {
+    // Create custom DB tables
+    GSI_DB::create_tables();
+
+    // Register custom roles
+    add_role('gsi_admin', 'GSI Admin', [
+        'read'              => true,
+        'gsi_manage_users'  => true,
+        'gsi_manage_backup' => true,
+    ]);
+    add_role('gsi_rep', 'GSI Rep', [
+        'read' => true,
+    ]);
+});
+
+// Reusable permission callbacks used in all REST routes:
+function gsi_is_authenticated(): bool {
+    return is_user_logged_in();
+}
+function gsi_is_admin(): bool {
+    return current_user_can('gsi_manage_users');
+}</code></pre>
+
+<h3>8.5 REST Route Registration Pattern</h3>
+<pre><code>add_action('rest_api_init', function() {
+
+    // Collection endpoint (GET list + POST create)
+    register_rest_route('gsi/v1', '/opportunities', [
+        [
+            'methods'             => 'GET',
+            'callback'            => ['GSI_Opportunities', 'list_all'],
+            'permission_callback' => 'gsi_is_authenticated',
+        ],
+        [
+            'methods'             => 'POST',
+            'callback'            => ['GSI_Opportunities', 'create'],
+            'permission_callback' => 'gsi_is_authenticated',
+        ],
+    ]);
+
+    // Item endpoint (GET one + PATCH update + DELETE)
+    register_rest_route('gsi/v1', '/opportunities/(?P&lt;id&gt;\d+)', [
+        [
+            'methods'             => 'GET',
+            'callback'            => ['GSI_Opportunities', 'get_one'],
+            'permission_callback' => 'gsi_is_authenticated',
+            'args' => ['id' => ['validate_callback' => fn($v) => is_numeric($v)]],
+        ],
+        [
+            'methods'             => 'PATCH',
+            'callback'            => ['GSI_Opportunities', 'update'],
+            'permission_callback' => 'gsi_is_authenticated',
+        ],
+        [
+            'methods'             => 'DELETE',
+            'callback'            => ['GSI_Opportunities', 'delete'],
+            'permission_callback' => 'gsi_is_authenticated',
+        ],
+    ]);
+
+    // ... repeat pattern for all other resource endpoints
+});</code></pre>
+
+<h3>8.6 Standard Response Format</h3>
+<pre><code>// Success list:
+return new WP_REST_Response(['data' => $rows], 200);
+
+// Created:
+return new WP_REST_Response(['data' => $new_record], 201);
+
+// Not found:
+return new WP_Error('gsi_not_found', 'Record not found', ['status' => 404]);
+
+// Forbidden:
+return new WP_Error('gsi_forbidden', 'Access denied', ['status' => 403]);
+
+// Validation error:
+return new WP_Error('gsi_invalid', 'name is required', ['status' => 422]);</code></pre>
+
+<h3>8.7 MEDDPICC Score Calculation (PHP)</h3>
+<pre><code>function gsi_recalculate_meddpicc_score(int $opportunity_id): float {
+    global $wpdb;
+    $table = $wpdb->prefix . 'gsi_meddpicc_entries';
+
+    $weights = [
+        'Metrics'          => 15,
+        'EconomicBuyer'    => 15,
+        'DecisionCriteria' => 10,
+        'DecisionProcess'  => 10,
+        'IdentifyPain'     => 15,
+        'Champion'         => 15,
+        'Competition'      => 10,
+        'PaperProcess'     => 10,
+    ];
+
+    // Average relevance_score per element (ignoring NULL scores)
+    $rows = $wpdb->get_results($wpdb->prepare(
+        "SELECT element, AVG(relevance_score) AS avg_score
+         FROM $table
+         WHERE opportunity_id = %d AND relevance_score IS NOT NULL
+         GROUP BY element",
+        $opportunity_id
+    ));
+
+    $by_element = [];
+    foreach ($rows as $row) {
+        $by_element[$row->element] = (float) $row->avg_score;
+    }
+
+    $total = 0.0;
+    foreach ($weights as $element => $weight) {
+        $avg   = $by_element[$element] ?? 0.0;
+        $total += ($avg / 5.0) * $weight;
+    }
+    $score = round($total, 2);
+
+    $wpdb->update(
+        $wpdb->prefix . 'gsi_opportunities',
+        ['meddpicc_score' => $score],
+        ['id'             => $opportunity_id],
+        ['%f'],
+        ['%d']
+    );
+
+    return $score;
+}</code></pre>
+
+<h3>8.8 Frontend Stack</h3>
+<table>
+  <thead><tr><th>Concern</th><th>Recommendation</th></tr></thead>
+  <tbody>
+    <tr><td>UI framework</td><td>React 18 (matches the original) or Vue 3</td></tr>
+    <tr><td>SPA router</td><td>React Router v6 / Vue Router v4</td></tr>
+    <tr><td>Global state</td><td>Zustand (React) or Pinia (Vue) — current user, org data, reminder count</td></tr>
+    <tr><td>HTTP client</td><td>Native fetch + a thin wrapper that auto-injects X-WP-Nonce from gsiConfig.nonce</td></tr>
+    <tr><td>Styling</td><td>Tailwind CSS</td></tr>
+    <tr><td>UI components</td><td>Build from scratch: dialogs, dropdowns, tables, toasts, typeahead, tabs — do not pull in external component libraries</td></tr>
+    <tr><td>Charts</td><td>Recharts (React) or Chart.js for Outcomes page bar/funnel charts</td></tr>
+    <tr><td>Build tool</td><td>Vite — fast HMR in dev; outputs optimized bundle to themes/gsi-tracker/dist/</td></tr>
+    <tr><td>Nonce injection</td><td>wp_localize_script() in functions.php passes apiBase + nonce + currentUser to window.gsiConfig</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ===== SECTION 9 ===== -->
+<div class="section" id="s9">
+<h2>9. SiteGround Hosting Configuration</h2>
+
+<h3>PHP Settings</h3>
+<table>
+  <thead><tr><th>Setting</th><th>Value</th><th>How to set on SiteGround</th></tr></thead>
+  <tbody>
+    <tr><td>PHP version</td><td>8.1 or 8.2</td><td>Site Tools → Devs → PHP Manager</td></tr>
+    <tr><td>max_execution_time</td><td>120</td><td>PHP Manager → PHP Variables, or .user.ini in web root</td></tr>
+    <tr><td>upload_max_filesize</td><td>10M</td><td>PHP Manager → PHP Variables</td></tr>
+    <tr><td>post_max_size</td><td>12M</td><td>PHP Manager → PHP Variables</td></tr>
+    <tr><td>memory_limit</td><td>256M</td><td>PHP Manager → PHP Variables</td></tr>
+  </tbody>
+</table>
+
+<h3>MySQL</h3>
+<ul>
+  <li>MySQL 8.0+ is the default on SiteGround. Use InnoDB engine on all custom tables for real FK enforcement.</li>
+  <li>Collation: <code>utf8mb4_unicode_ci</code> to handle Unicode in names and notes.</li>
+</ul>
+
+<h3>HTTPS</h3>
+<ul>
+  <li>Enable free Let's Encrypt SSL: Site Tools → Security → SSL Manager.</li>
+  <li>Force HTTPS redirect in .htaccess (above the WordPress/SPA blocks):</li>
+</ul>
+<pre><code>RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]</code></pre>
+
+<h3>Caching — Critical</h3>
+<div class="warn"><strong>Warning:</strong> SiteGround's SuperCacher must be configured to bypass all API routes. Without this, a cached API response from one user's session will be served to another user, exposing private data.</div>
+<ul>
+  <li>Site Tools → Speed → Caching → Excluded URLs: add <code>/wp-json/*</code></li>
+  <li>Also exclude any cookie-setting URLs (wp-login.php).</li>
+  <li>The SPA app shell HTML can be cached — it contains no user data.</li>
+</ul>
+
+<h3>wp-config.php Security Additions</h3>
+<pre><code>define('DISALLOW_FILE_EDIT',  true);   // Disable WP theme/plugin editor
+define('DISALLOW_FILE_MODS',  true);   // Disable plugin install from WP Admin
+define('WP_DEBUG',            false);  // Off in production
+define('WP_DEBUG_LOG',        true);   // Log errors to wp-content/debug.log
+define('FORCE_SSL_ADMIN',     true);   // HTTPS for WP Admin</code></pre>
+
+<h3>Post-Install WordPress Checklist</h3>
+<ul>
+  <li><strong>Permalinks:</strong> Settings → Permalinks → Post name (/%postname%/) — required for REST API pretty URLs. Click Save after changing.</li>
+  <li><strong>Disable comments:</strong> Settings → Discussion → uncheck all comment settings.</li>
+  <li><strong>Timezone:</strong> Settings → General → set to your primary user base's timezone.</li>
+  <li><strong>Delete default content:</strong> Remove the Hello World post, Sample Page, and the default comment.</li>
+  <li><strong>Delete unused themes:</strong> Remove all bundled themes except gsi-tracker.</li>
+  <li><strong>Disable XML-RPC</strong> (not needed; reduces attack surface) — add to .htaccess:</li>
+</ul>
+<pre><code>&lt;Files xmlrpc.php&gt;
+  Order Deny,Allow
+  Deny from all
+&lt;/Files&gt;</code></pre>
+
+<h3>Gemini API Key Setup (one-time)</h3>
+<pre><code># Via WP-CLI on SiteGround SSH:
+wp option update gsi_gemini_api_key "your-key-here"
+
+# Or via a temporary PHP snippet in the plugin:
+# update_option('gsi_gemini_api_key', 'your-key-here');
+# (remove after running once)</code></pre>
+
+<h3>File Permissions</h3>
+<table>
+  <thead><tr><th>Path</th><th>Permission</th></tr></thead>
+  <tbody>
+    <tr><td>wp-config.php</td><td>400</td></tr>
+    <tr><td>.htaccess</td><td>644</td></tr>
+    <tr><td>Plugin .php files</td><td>644</td></tr>
+    <tr><td>Plugin directories</td><td>755</td></tr>
+    <tr><td>Theme dist/ assets</td><td>644</td></tr>
+  </tbody>
+</table>
+</div>
+
+</body>
+</html>

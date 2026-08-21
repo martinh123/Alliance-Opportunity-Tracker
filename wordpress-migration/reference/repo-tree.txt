@@ -1,0 +1,137 @@
+.
+├── alliance-opportunity-tracker-wordpress-handoff.zip
+├── artifacts
+│   ├── api-server
+│   │   ├── build.mjs
+│   │   ├── package.json
+│   │   ├── .replit-artifact
+│   │   ├── src
+│   │   ├── .tsbuildinfo
+│   │   ├── tsconfig.json
+│   │   └── vitest.config.ts
+│   ├── gsi-mobile
+│   │   ├── app
+│   │   ├── app.json
+│   │   ├── assets
+│   │   ├── babel.config.js
+│   │   ├── components
+│   │   ├── constants
+│   │   ├── context
+│   │   ├── .expo
+│   │   ├── expo-env.d.ts
+│   │   ├── .gitignore
+│   │   ├── hooks
+│   │   ├── metro.config.js
+│   │   ├── package.json
+│   │   ├── .replit-artifact
+│   │   ├── scripts
+│   │   ├── server
+│   │   └── tsconfig.json
+│   ├── gsi-tracker
+│   │   ├── components.json
+│   │   ├── index.html
+│   │   ├── package.json
+│   │   ├── public
+│   │   ├── .replit-artifact
+│   │   ├── src
+│   │   ├── .tsbuildinfo
+│   │   ├── tsconfig.json
+│   │   └── vite.config.ts
+│   └── mockup-sandbox
+│       ├── components.json
+│       ├── index.html
+│       ├── mockupPreviewPlugin.ts
+│       ├── package.json
+│       ├── .replit-artifact
+│       ├── src
+│       ├── .tsbuildinfo
+│       ├── tsconfig.json
+│       └── vite.config.ts
+├── attached_assets
+│   ├── image_1782421673022.png
+│   ├── image_1783951514430.png
+│   ├── image_1784216854413.png
+│   ├── image_1785412423509.png
+│   ├── MEDDPICC_dashboard_1_1782325733664.xlsx
+│   ├── OpsRamp_Tracker_MEDDPICC_1782314344622.pptx
+│   ├── Pasted--1-basic-tree-files-and-directories-try-tree-fallback-t_1787329688986.txt
+│   └── replit-request-prompt_1787327733305.txt
+├── .config
+│   ├── npm
+│   │   └── node_global
+│   └── .vscode-server
+├── .gitignore
+├── gsi-current-database-schema.json
+├── gsi-current-database-schema.md
+├── gsi-current-database-schema.sql
+├── gsi-current-database-schema.svg
+├── gsi-current-database-schema.zip
+├── gsi-route-map.json
+├── gsi-route-map.svg
+├── gsi-route-map.zip
+├── gsi-svg-screens
+│   ├── 00-contact-sheet.svg
+│   ├── 01-login.svg
+│   ├── 02-dashboard.svg
+│   ├── 03-opportunity-detail.svg
+│   ├── 04-partners.svg
+│   ├── 05-outcomes.svg
+│   ├── 06-nearby.svg
+│   ├── 07-admin-users.svg
+│   ├── 08-profile.svg
+│   ├── 09-not-found.svg
+│   └── README.txt
+├── gsi-tracker-svg-screens.zip
+├── gsi-wordpress-build-spec.html
+├── lib
+│   ├── api-client-react
+│   │   ├── package.json
+│   │   ├── src
+│   │   ├── tsconfig.json
+│   │   └── tsconfig.tsbuildinfo
+│   ├── api-spec
+│   │   ├── openapi.yaml
+│   │   ├── orval.config.ts
+│   │   └── package.json
+│   ├── api-zod
+│   │   ├── package.json
+│   │   ├── src
+│   │   ├── tsconfig.json
+│   │   └── tsconfig.tsbuildinfo
+│   ├── db
+│   │   ├── drizzle.config.ts
+│   │   ├── migrations
+│   │   ├── package.json
+│   │   ├── src
+│   │   ├── tsconfig.json
+│   │   └── tsconfig.tsbuildinfo
+│   └── integrations-gemini-ai
+│       ├── package.json
+│       ├── src
+│       ├── tsconfig.json
+│       └── tsconfig.tsbuildinfo
+├── .npmrc
+├── openapi.yaml
+├── package.json
+├── pnpm-lock.yaml
+├── pnpm-workspace.yaml
+├── .pythonlibs
+│   └── lib
+│       └── python3.11
+├── .replit
+├── .replitignore
+├── replit.md
+├── screenshots
+│   └── gsi-login-live.jpg
+├── scripts
+│   ├── package.json
+│   ├── post-merge.sh
+│   ├── src
+│   │   ├── hello.ts
+│   │   └── migrate-people-directory.ts
+│   ├── tsconfig.json
+│   └── tsconfig.tsbuildinfo
+├── tsconfig.base.json
+└── tsconfig.json
+
+46 directories, 89 files

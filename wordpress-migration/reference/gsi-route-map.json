@@ -1,0 +1,97 @@
+{
+  "application": "GSI Partner Opportunity Tracker",
+  "basePath": "/gsi-tracker",
+  "router": "Wouter",
+  "routeGroups": {
+    "public": [
+      {
+        "path": "/",
+        "name": "Root route",
+        "behavior": "Check authentication; redirect to /dashboard when signed in, otherwise /login"
+      },
+      {
+        "path": "/login",
+        "name": "Login",
+        "access": "public",
+        "component": "LoginRoute"
+      }
+    ],
+    "protected": [
+      {
+        "path": "/dashboard",
+        "name": "Dashboard",
+        "component": "Dashboard"
+      },
+      {
+        "path": "/opportunities/:id",
+        "name": "Opportunity Detail",
+        "component": "OpportunityDetail"
+      },
+      {
+        "path": "/partners",
+        "name": "Partners",
+        "component": "Partners"
+      },
+      {
+        "path": "/outcomes",
+        "name": "Outcomes",
+        "component": "Outcomes"
+      },
+      {
+        "path": "/nearby",
+        "name": "Nearby",
+        "component": "Nearby"
+      },
+      {
+        "path": "/profile",
+        "name": "Profile & Settings",
+        "component": "Profile"
+      }
+    ],
+    "admin": [
+      {
+        "path": "/admin/users",
+        "name": "User Administration",
+        "component": "AdminUsers",
+        "access": "admin"
+      }
+    ],
+    "fallback": [
+      {
+        "path": "*",
+        "name": "Not Found",
+        "component": "NotFound"
+      }
+    ]
+  },
+  "sharedProtectedLayout": [
+    "Sidebar navigation",
+    "Actions drawer",
+    "Current user identity",
+    "Profile & Settings",
+    "Sign out"
+  ],
+  "apiSurface": [
+    "/api/auth",
+    "/api/opportunities",
+    "/api/partners",
+    "/api/partner-resources",
+    "/api/internal-resources",
+    "/api/people",
+    "/api/meddpicc",
+    "/api/reminders",
+    "/api/company",
+    "/api/dashboard",
+    "/api/profile",
+    "/api/nearby",
+    "/api/admin",
+    "/api/backup",
+    "/api/mcp"
+  ],
+  "wordpressMapping": {
+    "spaShell": "index.php",
+    "restNamespace": "/wp-json/gsi/v1/",
+    "auth": "WordPress cookie + X-WP-Nonce",
+    "adminGuard": "gsi_manage_users capability"
+  }
+}
